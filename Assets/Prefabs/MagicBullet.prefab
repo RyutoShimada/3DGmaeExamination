@@ -113,6 +113,8 @@ MonoBehaviour:
   m_impulsePower: 10
   m_impulseDirection: 5
   m_muzzle: {fileID: 0}
+  m_explosionEffect: {fileID: 1337198075554910, guid: 25c7aa9ad705fe143a4d71c1c8deb7d4,
+    type: 3}
 --- !u!199 &4041736653190759362
 ParticleSystemRenderer:
   serializedVersion: 6

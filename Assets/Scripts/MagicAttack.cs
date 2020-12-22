@@ -9,6 +9,7 @@ public class MagicAttack : MonoBehaviour
     [SerializeField] float m_impulsePower = 10f;
     [SerializeField] int m_impulseDirection = 5;
     [SerializeField] GameObject m_muzzle = default;
+    [SerializeField] GameObject m_explosionEffect = default;
     
     Vector3 randomV3;
     float time;
@@ -65,11 +66,11 @@ public class MagicAttack : MonoBehaviour
     {
         if (other.tag == "Block")
         {
-            //当たったらランダムな方向へ飛ばす
-            randomV3 = new Vector3(Random.Range(0, m_impulseDirection), Random.Range(0, m_impulseDirection), Random.Range(0, m_impulseDirection));
-            GameObject go = other.gameObject;
-            Rigidbody rb = go.GetComponent<Rigidbody>();
-            rb.AddForce(randomV3 * m_impulsePower, ForceMode.Impulse);
+            if (m_explosionEffect)
+            {
+                Instantiate(m_explosionEffect, this.transform.position, this.transform.rotation);
+            }
+            gameObject.SetActive(false);
         }
     }
 }
