@@ -1,12 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Cinemachine;
 
 public class VcamController : MonoBehaviour
 {
     [SerializeField] GameObject m_player = default;
-
-    
+    [SerializeField] GameObject m_freeLookCamera = default;
 
     /// <summary>このクラスのインスタンスが既にあるかどうかを確認する</summary>
     public static bool m_isExists = false;

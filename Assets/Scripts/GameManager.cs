@@ -44,7 +44,7 @@ public class GameManager : MonoBehaviour
 
         m_freelook.SetActive(true);
 
-        m_vcam.SetActive(false);
+        //m_vcam.SetActive(false);
 
         m_magicCircle.SetActive(false);
 
@@ -75,7 +75,7 @@ public class GameManager : MonoBehaviour
         if (Input.GetButtonDown("Fire2"))
         {
             m_freelook.SetActive(false);
-            m_vcam.SetActive(true);
+            //m_vcam.SetActive(true);
             m_magicCircle.SetActive(true);
 
             //8レイヤー(Plyaer)以外は全部有効にする
@@ -84,7 +84,7 @@ public class GameManager : MonoBehaviour
         else if (Input.GetButtonUp("Fire2"))
         {
             m_freelook.SetActive(true);
-            m_vcam.SetActive(false);
+            //m_vcam.SetActive(false);
             m_magicCircle.SetActive(false);
 
             //全てのレイヤーを有効にする
