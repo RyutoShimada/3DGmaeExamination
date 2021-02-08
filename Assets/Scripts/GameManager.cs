@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Cinemachine;
 
 public class GameManager : MonoBehaviour
 {
     //カメラのON/OFF制御
-    [SerializeField] GameObject m_vcam = default;
-    [SerializeField] GameObject m_freelook = default;
+    [SerializeField] CinemachineVirtualCameraBase m_vcam = default;
+    [SerializeField] CinemachineVirtualCameraBase m_freelook = default;
     //[SerializeField] GameObject m_player = default;
     [SerializeField] GameObject m_magicCircle = default;
 
@@ -42,7 +43,7 @@ public class GameManager : MonoBehaviour
 
         Cursor.lockState = CursorLockMode.Locked;
 
-        m_freelook.SetActive(true);
+        m_freelook.MoveToTopOfPrioritySubqueue();
 
         //m_vcam.SetActive(false);
 
@@ -72,20 +73,30 @@ public class GameManager : MonoBehaviour
 
     void CameraControl()
     {
+        //右クリックでエイム
         if (Input.GetButtonDown("Fire2"))
         {
-            m_freelook.SetActive(false);
-            //m_vcam.SetActive(true);
-            m_magicCircle.SetActive(true);
+            Vector3 freelookDir = m_freelook.LookAt.position - m_freelook.transform.position;
+            freelookDir.y = 0;
+            float angle = Vector3.SignedAngle(Vector3.forward, freelookDir, Vector3.up);
+            //Debug.Log($"angle: {angle}");
+            ((CinemachineVirtualCamera)m_vcam).GetCinemachineComponent<CinemachinePOV>().m_HorizontalAxis.Value = angle;
+            ((CinemachineVirtualCamera)m_vcam).GetCinemachineComponent<CinemachinePOV>().m_VerticalAxis.Value = 0f;
+
+            m_vcam.MoveToTopOfPrioritySubqueue(); //vcamを優先
+            //m_freelook.SetActive(false);
+
+            m_magicCircle.SetActive(true); //魔法陣の展開
 
             //8レイヤー(Plyaer)以外は全部有効にする
             Camera.main.cullingMask = ~(1 << 8);
         }
         else if (Input.GetButtonUp("Fire2"))
         {
-            m_freelook.SetActive(true);
+            m_freelook.MoveToTopOfPrioritySubqueue(); //freelookを優先
             //m_vcam.SetActive(false);
-            m_magicCircle.SetActive(false);
+
+            m_magicCircle.SetActive(false); //魔法陣を収束
 
             //全てのレイヤーを有効にする
             Camera.main.cullingMask = -1;
