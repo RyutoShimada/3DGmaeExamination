@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 8017212293185142858}
   - component: {fileID: 8017212293185142859}
   - component: {fileID: 8017212293185142852}
+  - component: {fileID: 8083229472773411209}
   m_Layer: 5
   m_Name: MagicCircle
   m_TagString: Untagged
@@ -94,6 +95,18 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &8083229472773411209
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8017212293185142854}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f26ec18d02e9c2447a4bf29555b5b1ef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8017212293525758373
 GameObject:
   m_ObjectHideFlags: 0
@@ -106,6 +119,7 @@ GameObject:
   - component: {fileID: 8017212293525758378}
   - component: {fileID: 8017212293525758379}
   - component: {fileID: 8017212293525758372}
+  - component: {fileID: 8560175687904877143}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -193,3 +207,15 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &8560175687904877143
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8017212293525758373}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf3bdab2c9fd366479fb7f0759941c32, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
