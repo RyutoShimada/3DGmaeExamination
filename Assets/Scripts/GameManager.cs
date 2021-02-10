@@ -20,6 +20,8 @@ public class GameManager : MonoBehaviour
 
     GoolController m_goolController;
 
+    LayerMask m_playerLayer;
+
     /// <summary>このクラスのインスタンスが既にあるかどうかを確認する</summary>
     public static bool m_isExists = false;
 
@@ -43,7 +45,7 @@ public class GameManager : MonoBehaviour
 
         Cursor.lockState = CursorLockMode.Locked;
 
-        m_freelook.MoveToTopOfPrioritySubqueue();
+        m_freelook.MoveToTopOfPrioritySubqueue(); //freelookを優先
 
         //m_vcam.SetActive(false);
 
@@ -52,6 +54,11 @@ public class GameManager : MonoBehaviour
         m_playerController = m_player.GetComponent<PlayerController>();
 
         m_goolController = m_goolObject.GetComponent<GoolController>();
+
+        if (m_player)
+        {
+            m_playerLayer = m_player.layer;
+        }
     }
 
     // Update is called once per frame
@@ -89,7 +96,7 @@ public class GameManager : MonoBehaviour
             m_magicCircle.SetActive(true); //魔法陣の展開
 
             //8レイヤー(Plyaer)以外は全部有効にする
-            Camera.main.cullingMask = ~(1 << 8);
+            Camera.main.cullingMask = ~(1 << m_playerLayer);
         }
         else if (Input.GetButtonUp("Fire2"))
         {

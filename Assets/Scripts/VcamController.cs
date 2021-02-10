@@ -23,14 +23,4 @@ public class VcamController : MonoBehaviour
             DontDestroyOnLoad(this.gameObject);
         }
     }
-
-    void Start()
-    {
-        
-    }
-
-    void Update()
-    {
-        
-    }
 }
