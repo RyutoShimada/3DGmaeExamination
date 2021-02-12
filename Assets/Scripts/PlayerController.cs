@@ -19,6 +19,8 @@ public class PlayerController : MonoBehaviour
     Animator m_anim;
     AudioSource m_audio;
 
+    Ray ray;
+    public RaycastHit hit;
 
     //-----Player情報-----
     /// <summary>Playerのレベル</summary>
@@ -34,7 +36,7 @@ public class PlayerController : MonoBehaviour
     /// <summary>魔法のオブジェクトプール</summary>
     [SerializeField] Transform m_magicBulletsPool = default;
     /// <summary>魔法を生成する場所</summary>
-    [SerializeField] Transform m_generater = default;
+    [SerializeField] Transform m_muzzle = default;
     /// <summary>攻撃のインターバル</summary>
     [SerializeField] float m_attackInterval = 3f;
 
@@ -104,6 +106,16 @@ public class PlayerController : MonoBehaviour
             //Playerが倒れないようにする
             this.transform.rotation = new Quaternion(0f, transform.rotation.y, 0f, transform.rotation.w);
 
+            ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+            int LayerMask = ~(1 <<11);
+
+            if (Physics.Raycast(ray, out hit, 100f, LayerMask))
+            {
+                m_muzzle.gameObject.transform.LookAt(hit.point);    // muzzleの向きを変えている
+                Debug.DrawLine(m_muzzle.position, hit.point, Color.red);
+            }
+
             //クリックしたらAttackアニメーションを再生
             if (Input.GetButtonDown("Fire1"))
             {
@@ -126,13 +138,9 @@ public class PlayerController : MonoBehaviour
         {
             //y軸方向の動きだけ反映し、xとzは0にすることで、移動を辞めた時にピタッと止まれる
             m_rb.velocity = new Vector3(0f, m_rb.velocity.y, 0f);
-
-            //status = Status.Idol;
         }
         else
         {
-            //if (m_looking) return;
-
             //カメラが向いている方向を基準にキャラクターが動くように、入力のベクトルを変換する
             dir = Camera.main.transform.TransformDirection(dir);
             dir.y = 0;//y軸方向はゼロにして水平方向のベクトルにする
@@ -153,9 +161,6 @@ public class PlayerController : MonoBehaviour
             vel.y = m_rb.velocity.y;
 
             m_rb.velocity = vel;
-
-            //status = Status.Run;
-
         }
 
         //IdolとRunアニメーションを切り替える
@@ -180,7 +185,7 @@ public class PlayerController : MonoBehaviour
                 if (!t.gameObject.activeSelf)
                 {
                     //非アクティブなオブジェクトの位置と回転を設定
-                    t.SetPositionAndRotation(m_generater.position, transform.rotation);
+                    t.SetPositionAndRotation(m_muzzle.position, m_muzzle.rotation);
 
                     //アクティブにする
                     t.gameObject.SetActive(true);
@@ -210,7 +215,7 @@ public class PlayerController : MonoBehaviour
             if (!t.gameObject.activeSelf)
             {
                 //非アクティブなオブジェクトの位置と回転を設定
-                t.SetPositionAndRotation(m_generater.position, transform.rotation);
+                t.SetPositionAndRotation(m_muzzle.position, transform.rotation);
 
                 //アクティブにする
                 t.gameObject.SetActive(true);
@@ -219,24 +224,6 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
-
-    //void StateAnimation()
-    //{
-    //    switch (status)
-    //    {
-    //        case Status.Idol:
-    //            m_anim.SetBool("Run", false);
-    //            break;
-    //        case Status.Run:
-    //            m_anim.SetFloat("Run",);
-    //            break;
-    //        case Status.Attack:
-    //            m_anim.SetTrigger("Attack");
-    //            break;
-    //        default:
-    //            break;
-    //    }
-    //}
 
     enum Status
     {

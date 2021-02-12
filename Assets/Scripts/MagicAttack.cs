@@ -6,30 +6,27 @@ public class MagicAttack : MonoBehaviour
 {
     [SerializeField] float m_speed = 10f;
     [SerializeField] float m_interval = 5f;
-    [SerializeField] float m_impulsePower = 10f;
-    [SerializeField] int m_impulseDirection = 5;
     [SerializeField] GameObject m_muzzle = default;
     [SerializeField] GameObject m_explosionEffect = default;
-    
-    Vector3 randomV3;
+
+    [SerializeField] GameObject m_player = default;
+    PlayerController m_playerController;
+
     float time;
-    /// <summary>発射する方向</summary>
+
     Vector3 dir;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        m_playerController = m_player.GetComponent<PlayerController>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        //muzzleの向きをカメラの向きにする
-        m_muzzle.transform.rotation = Camera.main.transform.rotation;
-
-        //muzzleの正面を取得
-        dir = m_muzzle.transform.forward;
+        //向きを決めたい
+        dir = m_playerController.hit.point + m_muzzle.transform.position;
 
         //魔法の弾を発射
         this.transform.position += Attacking(dir, m_speed);
