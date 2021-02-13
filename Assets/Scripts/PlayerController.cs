@@ -32,13 +32,13 @@ public class PlayerController : MonoBehaviour
     /// <summary>ターンの速さ</summary>
     [SerializeField] float m_turnSpeed = 5f;
     /// <summary>魔法のオブジェクトを入れておく</summary>
-    [SerializeField] GameObject[] m_magicBullet = default;
+    //[SerializeField] GameObject[] m_magicBullet = default;
     /// <summary>魔法のオブジェクトプール</summary>
     [SerializeField] Transform m_magicBulletsPool = default;
     /// <summary>魔法を生成する場所</summary>
     [SerializeField] Transform m_muzzle = default;
     /// <summary>攻撃のインターバル</summary>
-    [SerializeField] float m_attackInterval = 3f;
+    //[SerializeField] float m_attackInterval = 3f;
 
     /// <summary>このクラスのインスタンスが既にあるかどうかを確認する</summary>
     public static bool m_isExists = false;
@@ -113,7 +113,7 @@ public class PlayerController : MonoBehaviour
             //Playerが倒れないようにする
             this.transform.rotation = new Quaternion(0f, transform.rotation.y, 0f, transform.rotation.w);
 
-            m_muzzle.transform.forward = Camera.main.transform.forward;
+            //m_muzzle.transform.forward = Camera.main.transform.forward;
 
             Debug.DrawLine(m_muzzle.position, m_muzzle.transform.forward * 100f, Color.red);
 
@@ -197,6 +197,9 @@ public class PlayerController : MonoBehaviour
                 {
                     //非アクティブなオブジェクトの位置と回転を設定
                     t.SetPositionAndRotation(m_muzzle.position, m_muzzle.rotation);
+
+                    //向きを設定
+                    t.GetComponent<MagicAttack>()?.OnFire(m_muzzle.transform.forward);
 
                     //アクティブにする
                     t.gameObject.SetActive(true);
