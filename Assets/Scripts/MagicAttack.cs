@@ -53,7 +53,7 @@ public class MagicAttack : MonoBehaviour
         time = 0;
     }
 
-    private void OnTriggerEnter(Collider other)
+    void OnTriggerEnter(Collider other)
     {
         if (!m_explosionEffect) return;//エフェクトがないなら実行しない
         Instantiate(m_explosionEffect, this.transform.position, this.transform.rotation);

@@ -97,7 +97,7 @@ public class PlayerController : MonoBehaviour
 
     void SceneLoaded(Scene nextScene, LoadSceneMode mode)
     {
-        
+
     }
 
     /// <summary>
@@ -187,57 +187,28 @@ public class PlayerController : MonoBehaviour
     {
         // https://qiita.com/NekoCan/items/e3908b8e4e91b95d726a を参照
 
-        if (m_playerLevel < 5)
+        //アクティブでないオブジェクトをm_magicBulletsの中から検索
+        foreach (Transform t in m_magicBulletsPool)
         {
-            //アクティブでないオブジェクトをm_magicBulletsの中から検索
-            foreach (Transform t in m_magicBulletsPool)
+            //アクティブでないなら
+            if (!t.gameObject.activeSelf)
             {
-                //アクティブでないなら
-                if (!t.gameObject.activeSelf)
-                {
-                    //非アクティブなオブジェクトの位置と回転を設定
-                    t.SetPositionAndRotation(m_muzzle.position, m_muzzle.rotation);
+                //非アクティブなオブジェクトの位置と回転を設定
+                t.SetPositionAndRotation(m_muzzle.position, m_muzzle.rotation);
 
-                    //向きを設定
-                    t.GetComponent<MagicAttack>()?.OnFire(m_muzzle.transform.forward);
+                //向きを設定
+                t.GetComponent<MagicAttack>()?.OnFire(m_muzzle.transform.forward);
 
-                    //アクティブにする
-                    t.gameObject.SetActive(true);
+                //アクティブにする
+                t.gameObject.SetActive(true);
 
-                    m_audio.Play();
+                m_audio.Play();
 
-                    return;
-                }
+                return;
             }
         }
-        //else if (m_playerLevel >= 5)
-        //{
-        //    StartCoroutine(ContinuousAttack(m_attackInterval));
-        //}
+
     }
-
-    /// <summary>
-    /// 一定間隔で魔法を連続生成
-    /// </summary>
-    /// <param name="rateTime">遅らせる間隔</param>
-    /// <returns>連続魔法攻撃</returns>
-    //IEnumerator ContinuousAttack(float rateTime)
-    //{
-    //    foreach (Transform t in m_magicBulletsPool)
-    //    {
-    //        //アクティブでないなら
-    //        if (!t.gameObject.activeSelf)
-    //        {
-    //            //非アクティブなオブジェクトの位置と回転を設定
-    //            t.SetPositionAndRotation(m_muzzle.position, transform.rotation);
-
-    //            //アクティブにする
-    //            t.gameObject.SetActive(true);
-
-    //            yield return new WaitForSeconds(rateTime);
-    //        }
-    //    }
-    //}
 
     enum Status
     {
