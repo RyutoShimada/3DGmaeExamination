@@ -5,9 +5,6 @@ using Cinemachine;
 
 public class VcamController : MonoBehaviour
 {
-    [SerializeField] GameObject m_player = default;
-    [SerializeField] GameObject m_freeLookCamera = default;
-
     /// <summary>このクラスのインスタンスが既にあるかどうかを確認する</summary>
     public static bool m_isExists = false;
 
@@ -29,10 +26,5 @@ public class VcamController : MonoBehaviour
     private void Start()
     {
         m_muzzle.transform.position = this.transform.position;
-    }
-
-    private void Update()
-    {
-        
     }
 }
