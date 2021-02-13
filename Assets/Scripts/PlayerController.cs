@@ -19,8 +19,8 @@ public class PlayerController : MonoBehaviour
     Animator m_anim;
     AudioSource m_audio;
 
-    Ray ray;
-    public RaycastHit hit;
+    //Ray ray;
+    //public RaycastHit hit;
 
     //-----Player情報-----
     /// <summary>Playerのレベル</summary>
@@ -62,10 +62,17 @@ public class PlayerController : MonoBehaviour
         m_rb = GetComponent<Rigidbody>();
         m_anim = GetComponent<Animator>();
         m_audio = GetComponent<AudioSource>();
-        foreach (var item in m_magicBullet)
-        {
-            Instantiate(item, transform.position, transform.rotation, m_magicBulletsPool);
-        }
+
+        //for (int i = 0; i < 5; i++)
+        //{
+        //    Instantiate(m_magicBullet[0], transform.position, transform.rotation, m_magicBulletsPool);
+        //}
+        //foreach (var item in m_magicBullet)
+        //{
+        //    Instantiate(item, transform.position, transform.rotation, m_magicBulletsPool);
+        //}
+        //1.初めから必要分のオブジェクトを生成しておく。
+        //2.弾を使いたいときに、空いているオブジェクトがなければ生成する。
     }
 
     private void FixedUpdate()
@@ -106,15 +113,19 @@ public class PlayerController : MonoBehaviour
             //Playerが倒れないようにする
             this.transform.rotation = new Quaternion(0f, transform.rotation.y, 0f, transform.rotation.w);
 
-            ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            m_muzzle.transform.forward = Camera.main.transform.forward;
 
-            int LayerMask = ~(1 <<11);
+            Debug.DrawLine(m_muzzle.position, m_muzzle.transform.forward * 100f, Color.red);
 
-            if (Physics.Raycast(ray, out hit, 100f, LayerMask))
-            {
-                m_muzzle.gameObject.transform.LookAt(hit.point);    // muzzleの向きを変えている
-                Debug.DrawLine(m_muzzle.position, hit.point, Color.red);
-            }
+            //ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+            //int LayerMask = ~(1 <<11);
+
+            //if (Physics.Raycast(ray, out hit, 100f, LayerMask))
+            //{
+            //    m_muzzle.gameObject.transform.LookAt(hit.point);    // muzzleの向きを変えている
+            //    Debug.DrawLine(m_muzzle.position, hit.point, Color.red);
+            //}
 
             //クリックしたらAttackアニメーションを再生
             if (Input.GetButtonDown("Fire1"))
@@ -196,10 +207,10 @@ public class PlayerController : MonoBehaviour
                 }
             }
         }
-        else if (m_playerLevel >= 5)
-        {
-            StartCoroutine(ContinuousAttack(m_attackInterval));
-        }
+        //else if (m_playerLevel >= 5)
+        //{
+        //    StartCoroutine(ContinuousAttack(m_attackInterval));
+        //}
     }
 
     /// <summary>
@@ -207,23 +218,23 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     /// <param name="rateTime">遅らせる間隔</param>
     /// <returns>連続魔法攻撃</returns>
-    IEnumerator ContinuousAttack(float rateTime)
-    {
-        foreach (Transform t in m_magicBulletsPool)
-        {
-            //アクティブでないなら
-            if (!t.gameObject.activeSelf)
-            {
-                //非アクティブなオブジェクトの位置と回転を設定
-                t.SetPositionAndRotation(m_muzzle.position, transform.rotation);
+    //IEnumerator ContinuousAttack(float rateTime)
+    //{
+    //    foreach (Transform t in m_magicBulletsPool)
+    //    {
+    //        //アクティブでないなら
+    //        if (!t.gameObject.activeSelf)
+    //        {
+    //            //非アクティブなオブジェクトの位置と回転を設定
+    //            t.SetPositionAndRotation(m_muzzle.position, transform.rotation);
 
-                //アクティブにする
-                t.gameObject.SetActive(true);
+    //            //アクティブにする
+    //            t.gameObject.SetActive(true);
 
-                yield return new WaitForSeconds(rateTime);
-            }
-        }
-    }
+    //            yield return new WaitForSeconds(rateTime);
+    //        }
+    //    }
+    //}
 
     enum Status
     {

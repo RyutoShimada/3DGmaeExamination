@@ -11,6 +11,8 @@ public class VcamController : MonoBehaviour
     /// <summary>このクラスのインスタンスが既にあるかどうかを確認する</summary>
     public static bool m_isExists = false;
 
+    [SerializeField] GameObject m_muzzle = default;
+
     private void Awake()
     {
         if (m_isExists)
@@ -22,5 +24,15 @@ public class VcamController : MonoBehaviour
             m_isExists = true;
             DontDestroyOnLoad(this.gameObject);
         }
+    }
+
+    private void Start()
+    {
+        m_muzzle.transform.position = this.transform.position;
+    }
+
+    private void Update()
+    {
+        
     }
 }

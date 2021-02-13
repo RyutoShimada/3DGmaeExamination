@@ -26,10 +26,10 @@ public class MagicAttack : MonoBehaviour
     void Update()
     {
         //向きを決めたい
-        dir = m_playerController.hit.point + m_muzzle.transform.position;
+        //dir = m_playerController.hit.point + m_muzzle.transform.position;
 
         //魔法の弾を発射
-        this.transform.position += Attacking(dir, m_speed);
+        this.transform.position += Attacking(m_muzzle.transform.forward, m_speed);
 
         unActive();
 
@@ -67,7 +67,7 @@ public class MagicAttack : MonoBehaviour
             {
                 Instantiate(m_explosionEffect, this.transform.position, this.transform.rotation);
             }
-            gameObject.SetActive(false);
         }
+        gameObject.SetActive(false);
     }
 }
