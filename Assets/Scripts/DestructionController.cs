@@ -4,18 +4,18 @@ using UnityEngine;
 
 public class DestructionController : MonoBehaviour
 {
-    /// <summary>破壊したオブジェクト</summary>
+    /// <summary>破壊された時に出るオブジェクト</summary>
     [SerializeField] GameObject m_destroyObject = default;
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "MagicBullet")
+        if (other.tag == "MagicBullet")//魔法オブジェクトと接触した時
         {
             for (int i = 0; i < 2; i++)
             {
-                Instantiate(m_destroyObject, this.transform.position, this.transform.rotation);
+                Instantiate(m_destroyObject, this.transform.position, this.transform.rotation);//破壊された時に出すオブジェクトをインスタンス化
             }
-            this.gameObject.SetActive(false);
+            Destroy(this.gameObject);//このオブジェクトを破棄
         }
     }
 }
