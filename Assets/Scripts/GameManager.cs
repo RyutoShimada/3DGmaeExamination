@@ -6,32 +6,30 @@ using Cinemachine;
 
 public class GameManager : MonoBehaviour
 {
-    //カメラのON/OFF制御
+    /// <summary>vcamを入れる変数</summary>
     [SerializeField] CinemachineVirtualCameraBase m_vcam = default;
+    /// <summary>freelookを入れる変数</summary>
     [SerializeField] CinemachineVirtualCameraBase m_freelook = default;
-    //[SerializeField] GameObject m_player = default;
+    /// <summary>エイム時の魔法陣</summary>
     [SerializeField] GameObject m_magicCircle = default;
-
+    /// <summary>playerのオブジェクト</summary>
     [SerializeField] GameObject m_player = default;
-
-    PlayerController m_playerController;
-
+    /// <summary>Goolした時の判定をするためのオブジェクト</summary>
     [SerializeField] GameObject m_goolObject = default;
-
+    /// <summary>PlayerControllerを格納する変数</summary>
+    PlayerController m_playerController;
+    /// <summary>GoolControllerを格納する変数</summary>
     GoolController m_goolController;
-
-    LayerMask m_playerLayer;
-
     /// <summary>このクラスのインスタンスが既にあるかどうかを確認する</summary>
     public static bool m_isExists = false;
 
     private void Awake()
     {
-        if (m_isExists)
+        if (m_isExists)//2回目以降のロードは既に配置されているこのオブジェクトを破棄する
         {
             Destroy(this.gameObject);
         }
-        else
+        else //初回のロードはこっちに入り、フラグを立てる
         {
             m_isExists = true;
             DontDestroyOnLoad(this.gameObject);
@@ -41,24 +39,13 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Cursor.visible = false;
-
-        Cursor.lockState = CursorLockMode.Locked;
-
+        Cursor.visible = false;//カーソルを消す
+        Cursor.lockState = CursorLockMode.Locked;//カメラの向きをマウスと連動させる
         m_freelook.MoveToTopOfPrioritySubqueue(); //freelookを優先
-
-        //m_vcam.SetActive(false);
-
-        m_magicCircle.SetActive(false);
+        m_magicCircle.SetActive(false);//魔法陣を非表示
 
         m_playerController = m_player.GetComponent<PlayerController>();
-
         m_goolController = m_goolObject.GetComponent<GoolController>();
-
-        if (m_player)
-        {
-            m_playerLayer = m_player.layer;
-        }
     }
 
     // Update is called once per frame
@@ -66,37 +53,33 @@ public class GameManager : MonoBehaviour
     {
         CameraControl();
 
-        DontDestroyOnLoad(this.gameObject);
-
-        if (m_goolController)
+        if (m_goolController.m_gool)//ゴールしたらシーンをロードする
         {
-            if (m_goolController.m_gool)
-            {
-                m_playerController.StartLoadScene();
-                m_goolController.m_gool = false;
-            }
+            m_playerController.StartLoadScene();
+            m_goolController.m_gool = false;
         }
     }
-
+    /// <summary>
+    /// カメラを制御する
+    /// </summary>
     void CameraControl()
     {
         //右クリックでエイム
         if (Input.GetButtonDown("Fire2"))
         {
+            ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            //先生に教えてもらったカメラ制御（エイムした時にvcamをFreeLockで見ていた方向にする処理）
             Vector3 freelookDir = m_freelook.LookAt.position - m_freelook.transform.position;
             freelookDir.y = 0;
             float angle = Vector3.SignedAngle(Vector3.forward, freelookDir, Vector3.up);
             //Debug.Log($"angle: {angle}");
             ((CinemachineVirtualCamera)m_vcam).GetCinemachineComponent<CinemachinePOV>().m_HorizontalAxis.Value = angle;
             ((CinemachineVirtualCamera)m_vcam).GetCinemachineComponent<CinemachinePOV>().m_VerticalAxis.Value = 0f;
-
+            ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            
             m_vcam.MoveToTopOfPrioritySubqueue(); //vcamを優先
-            //m_freelook.SetActive(false);
-
             m_magicCircle.SetActive(true); //魔法陣の展開
-
-            //8レイヤー(Plyaer)以外は全部有効にする
-            Camera.main.cullingMask = ~(1 << m_playerLayer);
+            Camera.main.cullingMask = ~(1 << m_player.layer);//8レイヤー(Plyaer)以外は全部有効にする
         }
         else if (Input.GetButtonUp("Fire2"))
         {

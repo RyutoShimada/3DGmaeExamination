@@ -4,19 +4,8 @@ using UnityEngine;
 
 public class GoolController : MonoBehaviour
 {
+    /// <summary>ゴールの判定</summary>
     public bool m_gool = false;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
     [System.Obsolete]
     private void OnCollisionEnter(Collision collision)
