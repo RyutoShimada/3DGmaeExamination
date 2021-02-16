@@ -63,6 +63,10 @@ public class MoveFloorController : MonoBehaviour
         {
             m_moveButton = false;
         }
+        else if (other.tag == "PointA")
+        {
+            m_moveButton = false;
+        }
     }
 
     private void OnTriggerStay(Collider other)
@@ -75,11 +79,21 @@ public class MoveFloorController : MonoBehaviour
         {
             state = State.GoToPointA;
         }
+    }
 
-        if (other.tag == "PointA" && m_rb.velocity == Vector3.zero)
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag == "Player")
         {
-            m_moveButton = false;
+            collision.transform.SetParent(this.gameObject.transform);
         }
+    }
 
+    private void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject.tag == "Player")
+        {
+            collision.transform.parent = null;
+        }
     }
 }

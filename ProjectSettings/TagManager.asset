@@ -9,6 +9,7 @@ TagManager:
   - Block
   - PointA
   - PointB
+  - MoveFloor
   layers:
   - Default
   - TransparentFX

@@ -52,12 +52,19 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         CameraControl();
-
-        if (m_goolController.m_gool)//ゴールしたらシーンをロードする
+        try
         {
-            m_playerController.StartLoadScene();
-            m_goolController.m_gool = false;
+            if (m_goolController.m_gool)//ゴールしたらシーンをロードする
+            {
+                m_playerController.StartLoadScene();
+                m_goolController.m_gool = false;
+            }
         }
+        catch (System.NullReferenceException)
+        {
+            Debug.LogError("Goolオブジェクトがアサインされていません。");
+        }
+        
     }
     /// <summary>
     /// カメラを制御する
