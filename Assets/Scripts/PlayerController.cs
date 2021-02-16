@@ -24,7 +24,7 @@ public class PlayerController : MonoBehaviour
 
     //-----Player情報-----
     /// <summary>Playerのレベル</summary>
-    [SerializeField] int m_playerLevel = 1;
+    //[SerializeField] int m_playerLevel = 1;
     /// <summary>動く速さ</summary>
     [SerializeField] float m_movingSpeed = 5f;
     /// <summary>加速する力</summary>

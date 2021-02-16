@@ -5,22 +5,81 @@ using UnityEngine;
 public class MoveFloorController : MonoBehaviour
 {
     [SerializeField] float m_speed = 1f;
-    [SerializeField] float m_width = 1f;
-    Vector3 m_startPosition;
+    /// <summary>動く床を動かすボタンの判定をする</summary>
+    [SerializeField] bool m_moveButton = false;
+    /// <summary>動く床の折り返し地点A</summary>
+    [SerializeField] Transform m_pointA = default;
+    /// <summary>動く床の折り返し地点B</summary>
+    [SerializeField] Transform m_pointB = default;
+    Rigidbody m_rb;
+    State state;
 
     // Start is called before the first frame update
     void Start()
     {
-        m_startPosition = this.transform.position;
+        m_rb = this.gameObject.GetComponent<Rigidbody>();
+        this.transform.position = m_pointA.position;
+        state = State.GoToPointA;
     }
 
     private void FixedUpdate()
     {
-        this.transform.position = m_startPosition + m_width * Mathf.Sin(m_speed * Time.time) * this.transform.forward;
+        if (m_moveButton)
+        {
+            switch (state)
+            {
+                case State.GoToPointA:
+                    Vector3 dirToA = m_pointA.position - this.transform.position;//行きたい方向が分かる
+                    Vector3 veloToA = m_speed * dirToA.normalized;
+                    //m_rb.AddForce(veloToA, ForceMode.Force);
+                    m_rb.velocity = veloToA;
+                    break;
+                case State.GoToPointB:
+                    Vector3 dirToB = m_pointB.position - this.transform.position;//行きたい方向が分かる
+                    Vector3 veloToB = m_speed * dirToB.normalized;
+                    //m_rb.AddForce(veloToB, ForceMode.Force);
+                    m_rb.velocity = veloToB;
+                    break;
+                default:
+                    break;
+            }
+        }
+        else
+        {
+            Vector3 v3 = m_rb.velocity;
+            v3.z = 0f;
+            m_rb.velocity = v3;
+        }
+    }
 
-        //yは動かさない
-        Vector3 v3 = this.transform.position;
-        v3.y = 0;
-        this.transform.position = v3;
+    enum State
+    {
+        GoToPointA, GoToPointB
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "PointB")
+        {
+            m_moveButton = false;
+        }
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.tag == "PointA" && m_rb.velocity.z < 0.1)
+        {
+            state = State.GoToPointB;
+        }
+        else if (other.tag == "PointB")
+        {
+            state = State.GoToPointA;
+        }
+
+        if (other.tag == "PointA" && m_rb.velocity == Vector3.zero)
+        {
+            m_moveButton = false;
+        }
+
     }
 }
