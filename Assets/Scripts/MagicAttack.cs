@@ -49,7 +49,7 @@ public class MagicAttack : MonoBehaviour
     /// <param name="direction">方向</param>
     public void OnFire(Vector3 direction)
     {
-        dir = direction;
+        dir = direction;//ここで魔法を打った方向を保存
         time = 0;
     }
 

@@ -63,7 +63,7 @@ public class PlayerController : MonoBehaviour
         // イベントにイベントハンドラーを追加
         SceneManager.sceneLoaded += SceneLoaded;
         // シーンの読み込み
-        SceneManager.LoadScene("MapScene");
+        SceneManager.LoadScene("Stage1");
     }
 
     void SceneLoaded(Scene nextScene, LoadSceneMode mode)
@@ -144,7 +144,7 @@ public class PlayerController : MonoBehaviour
                 t.SetPositionAndRotation(m_muzzle.position, m_muzzle.rotation);
 
                 //向きを設定
-                t.GetComponent<MagicAttack>()?.OnFire(m_muzzle.transform.forward);
+                t.GetComponent<MagicAttack>()?.OnFire(m_muzzle.transform.forward);//三項演算子の一種でMagicAttackをGetComponent出来た実行する
 
                 //アクティブにする
                 t.gameObject.SetActive(true);
