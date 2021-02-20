@@ -13,6 +13,9 @@ public class PlayerController : MonoBehaviour
     Animator m_anim;
     AudioSource m_audio;
 
+    Rigidbody m_moveFloorRb;
+    bool m_onMoveFloor = false;
+
     //-----Player情報-----
     /// <summary>動く速さ</summary>
     [SerializeField] float m_movingSpeed = 5f;
@@ -104,8 +107,15 @@ public class PlayerController : MonoBehaviour
 
         if (dir == Vector3.zero)
         {
-            //y軸方向の動きだけ反映し、xとzは0にすることで、移動を辞めた時にピタッと止まれる
-            m_rb.velocity = new Vector3(0f, m_rb.velocity.y, 0f);
+            if (m_onMoveFloor)
+            {
+                m_rb.velocity = m_moveFloorRb.velocity;
+            }
+            else
+            {
+                //y軸方向の動きだけ反映し、xとzは0にすることで、移動を辞めた時にピタッと止まれる
+                m_rb.velocity = new Vector3(0f, m_rb.velocity.y, 0f);
+            }
         }
         else
         {
@@ -153,6 +163,30 @@ public class PlayerController : MonoBehaviour
 
                 return;
             }
+        }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag == "MoveFloor")
+        {
+            m_moveFloorRb = collision.gameObject.GetComponent<Rigidbody>();
+        }
+    }
+
+    private void OnCollisionStay(Collision collision)
+    {
+        if (collision.gameObject.tag == "MoveFloor")
+        {
+            m_onMoveFloor = true;
+        }
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject.tag == "MoveFloor")
+        {
+            m_onMoveFloor = false;
         }
     }
 }

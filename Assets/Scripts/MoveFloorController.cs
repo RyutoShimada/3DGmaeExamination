@@ -46,9 +46,7 @@ public class MoveFloorController : MonoBehaviour
         }
         else
         {
-            Vector3 v3 = m_rb.velocity;
-            v3.z = 0f;
-            m_rb.velocity = v3;
+            m_rb.velocity = Vector3.zero;
         }
     }
 
