@@ -45,5 +45,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_vcam: {fileID: 0}
   m_freelook: {fileID: 0}
-  m_player: {fileID: 0}
   m_magicCircle: {fileID: 0}
+  m_player: {fileID: 0}
+  m_goolObject: {fileID: 0}

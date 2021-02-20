@@ -13,6 +13,8 @@ public class PlayerController : MonoBehaviour
     Animator m_anim;
     AudioSource m_audio;
 
+    GameObject m_startPosition;
+
     Rigidbody m_moveFloorRb;
     bool m_onMoveFloor = false;
 
@@ -71,7 +73,8 @@ public class PlayerController : MonoBehaviour
 
     void SceneLoaded(Scene nextScene, LoadSceneMode mode)
     {
-
+        m_startPosition = GameObject.FindGameObjectWithTag("SpawnPoint");
+        this.gameObject.transform.position = m_startPosition.transform.position;
     }
 
     /// <summary>

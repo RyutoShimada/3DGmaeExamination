@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3312586900238523998}
+  - component: {fileID: -7494878385389782260}
   m_Layer: 8
   m_Name: MagicBulletsPool
   m_TagString: Untagged
@@ -26,7 +27,95 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 1030110702552841587}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &-7494878385389782260
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3312586900238523969}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5e3eaae3aef6b74a918701d183c053f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1001 &6721802903067033321
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 3312586900238523998}
+    m_Modifications:
+    - target: {fileID: 5981646829958366106, guid: 1acb45fbc8369db45a3fab7a864d98e0,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5981646829958366106, guid: 1acb45fbc8369db45a3fab7a864d98e0,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 3.29
+      objectReference: {fileID: 0}
+    - target: {fileID: 5981646829958366106, guid: 1acb45fbc8369db45a3fab7a864d98e0,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5981646829958366106, guid: 1acb45fbc8369db45a3fab7a864d98e0,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5981646829958366106, guid: 1acb45fbc8369db45a3fab7a864d98e0,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5981646829958366106, guid: 1acb45fbc8369db45a3fab7a864d98e0,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5981646829958366106, guid: 1acb45fbc8369db45a3fab7a864d98e0,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5981646829958366106, guid: 1acb45fbc8369db45a3fab7a864d98e0,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5981646829958366106, guid: 1acb45fbc8369db45a3fab7a864d98e0,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5981646829958366106, guid: 1acb45fbc8369db45a3fab7a864d98e0,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5981646829958366106, guid: 1acb45fbc8369db45a3fab7a864d98e0,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5981646829958366107, guid: 1acb45fbc8369db45a3fab7a864d98e0,
+        type: 3}
+      propertyPath: m_Name
+      value: FireMagicBullet
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 1acb45fbc8369db45a3fab7a864d98e0, type: 3}
+--- !u!4 &1030110702552841587 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5981646829958366106, guid: 1acb45fbc8369db45a3fab7a864d98e0,
+    type: 3}
+  m_PrefabInstance: {fileID: 6721802903067033321}
+  m_PrefabAsset: {fileID: 0}

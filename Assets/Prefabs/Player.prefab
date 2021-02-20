@@ -48,15 +48,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06b1fe84352946e4ba617e407942c8fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_playerLevel: 1
   m_movingSpeed: 8
-  m_addSpeed: 10
   m_turnSpeed: 10
-  m_magicBullet:
-  - {fileID: 0}
   m_magicBulletsPool: {fileID: 0}
   m_muzzle: {fileID: 0}
-  m_attackInterval: 3
 --- !u!54 &66636861290003206
 Rigidbody:
   m_ObjectHideFlags: 0

@@ -10,6 +10,7 @@ TagManager:
   - PointA
   - PointB
   - MoveFloor
+  - SpawnPoint
   layers:
   - Default
   - TransparentFX
