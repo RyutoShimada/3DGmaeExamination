@@ -107,7 +107,7 @@ public class PlayerController : MonoBehaviour
 
         if (dir == Vector3.zero)
         {
-            if (m_onMoveFloor)
+            if (m_onMoveFloor)//動く床に乗っている時は、速度ベクトルを動く床と同じにする
             {
                 m_rb.velocity = m_moveFloorRb.velocity;
             }

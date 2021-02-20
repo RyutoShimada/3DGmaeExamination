@@ -6,11 +6,14 @@ public class MoveFloorController : MonoBehaviour
 {
     [SerializeField] float m_speed = 1f;
     /// <summary>動く床を動かすボタンの判定をする</summary>
-    [SerializeField] bool m_moveButton = false;
+    bool m_moveButton = false;
     /// <summary>動く床の折り返し地点A</summary>
     [SerializeField] Transform m_pointA = default;
     /// <summary>動く床の折り返し地点B</summary>
     [SerializeField] Transform m_pointB = default;
+    /// <summary>床を動かすためのTrigger</summary>
+    [SerializeField] GameObject m_Trigger = default;
+    MoveFloorTrigger m_moveFloorTrigger;
     Rigidbody m_rb;
     State state;
 
@@ -20,6 +23,7 @@ public class MoveFloorController : MonoBehaviour
         m_rb = this.gameObject.GetComponent<Rigidbody>();
         this.transform.position = m_pointA.position;
         state = State.GoToPointA;
+        m_moveFloorTrigger = m_Trigger.gameObject.GetComponent<MoveFloorTrigger>();
     }
 
     private void FixedUpdate()
@@ -55,15 +59,22 @@ public class MoveFloorController : MonoBehaviour
         GoToPointA, GoToPointB
     }
 
+    public void Move()
+    {
+        m_moveButton = true;
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.tag == "PointB")
         {
             m_moveButton = false;
+            m_moveFloorTrigger.UnEffect();
         }
         else if (other.tag == "PointA")
         {
             m_moveButton = false;
+            m_moveFloorTrigger.UnEffect();
         }
     }
 
