@@ -11,14 +11,19 @@ public class PlayerController : MonoBehaviour
     Vector3 dir;
     Vector3 vel;
     Animator m_anim;
-    AudioSource m_audio;
 
-    GameObject m_startPosition;
+    AudioSource m_audio;
+    [SerializeField] AudioClip m_damageVoice = default;
 
     Rigidbody m_moveFloorRb;
     bool m_onMoveFloor = false;
 
+    /// <summary>Playerのスポーン地点</summary>
+    [SerializeField] GameObject m_spawnPoint = default;
+
     //-----Player情報-----
+    /// <summary>Playerのライフ</summary>
+    [SerializeField] int m_life = 3;
     /// <summary>動く速さ</summary>
     [SerializeField] float m_movingSpeed = 5f;
     /// <summary>ターンの速さ</summary>
@@ -73,8 +78,8 @@ public class PlayerController : MonoBehaviour
 
     void SceneLoaded(Scene nextScene, LoadSceneMode mode)
     {
-        m_startPosition = GameObject.FindGameObjectWithTag("SpawnPoint");
-        this.gameObject.transform.position = m_startPosition.transform.position;
+        m_spawnPoint = GameObject.FindGameObjectWithTag("SpawnPoint");
+        this.gameObject.transform.position = m_spawnPoint.transform.position;
     }
 
     /// <summary>
@@ -169,6 +174,16 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// SpawnPointへPlayerを移動させる
+    /// </summary>
+    void Respawn()
+    {
+        this.transform.position = m_spawnPoint.transform.position;
+        m_life--;
+        Debug.Log($"Life:{m_life}");
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.tag == "MoveFloor")
@@ -190,6 +205,16 @@ public class PlayerController : MonoBehaviour
         if (collision.gameObject.tag == "MoveFloor")
         {
             m_onMoveFloor = false;
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "Thorns")
+        {
+            Invoke("Respawn", 2);
+            m_anim.Play("Damage");
+            AudioSource.PlayClipAtPoint(m_damageVoice, transform.position);
         }
     }
 }
