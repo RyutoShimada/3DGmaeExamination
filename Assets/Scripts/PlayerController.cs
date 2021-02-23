@@ -14,6 +14,9 @@ public class PlayerController : MonoBehaviour
 
     AudioSource m_audio;
     [SerializeField] AudioClip m_damageVoice = default;
+    [SerializeField] AudioClip[] m_FireVoice = default;
+
+    int m_random = 0;
 
     Rigidbody m_moveFloorRb;
     bool m_onMoveFloor = false;
@@ -66,20 +69,6 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         PlayerAttackAnimation();
-    }
-
-    public void StartLoadScene()
-    {
-        // イベントにイベントハンドラーを追加
-        SceneManager.sceneLoaded += SceneLoaded;
-        // シーンの読み込み
-        SceneManager.LoadScene("Stage1");
-    }
-
-    void SceneLoaded(Scene nextScene, LoadSceneMode mode)
-    {
-        m_spawnPoint = GameObject.FindGameObjectWithTag("SpawnPoint");
-        this.gameObject.transform.position = m_spawnPoint.transform.position;
     }
 
     /// <summary>
@@ -169,6 +158,20 @@ public class PlayerController : MonoBehaviour
 
                 m_audio.Play();
 
+                m_random = Random.Range(0, 3);
+                switch (m_random)//Playerが攻撃するたびにランダムでセリフが変わる
+                {
+                    case 0:
+                        AudioSource.PlayClipAtPoint(m_FireVoice[0], transform.position);
+                        break;
+                    case 1:
+                        AudioSource.PlayClipAtPoint(m_FireVoice[1], transform.position);
+                        break;
+                    case 2:
+                        AudioSource.PlayClipAtPoint(m_FireVoice[2], transform.position);
+                        break;
+                }
+
                 return;
             }
         }
@@ -179,6 +182,7 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     void Respawn()
     {
+        m_spawnPoint = GameObject.FindGameObjectWithTag("SpawnPoint");
         this.transform.position = m_spawnPoint.transform.position;
         m_life--;
         Debug.Log($"Life:{m_life}");

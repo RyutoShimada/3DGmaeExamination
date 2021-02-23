@@ -12,6 +12,7 @@ TagManager:
   - MoveFloor
   - SpawnPoint
   - Thorns
+  - Gool
   layers:
   - Default
   - TransparentFX

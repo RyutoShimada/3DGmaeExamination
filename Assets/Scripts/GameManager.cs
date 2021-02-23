@@ -16,6 +16,10 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject m_player = default;
     /// <summary>Goolした時の判定をするためのオブジェクト</summary>
     [SerializeField] GameObject m_goolObject = default;
+    /// <summary>フェードインアウトをコントロールする</summary>
+    [SerializeField] FadeController m_FC = default;
+    /// <summary>Playerのスポーン地点</summary>
+    [SerializeField] GameObject m_spawnPoint = default;
     /// <summary>PlayerControllerを格納する変数</summary>
     PlayerController m_playerController;
     /// <summary>GoolControllerを格納する変数</summary>
@@ -34,6 +38,22 @@ public class GameManager : MonoBehaviour
             m_isExists = true;
             DontDestroyOnLoad(this.gameObject);
         }
+    }
+
+    public void StartLoadScene()
+    {
+        // イベントにイベントハンドラーを追加
+        SceneManager.sceneLoaded += SceneLoaded;
+        // シーンの読み込み
+        SceneManager.LoadScene("Stage1");
+    }
+
+    void SceneLoaded(Scene nextScene, LoadSceneMode mode)
+    {
+        m_FC.m_isFadeIn = true;
+        m_spawnPoint = GameObject.FindGameObjectWithTag("SpawnPoint");
+        m_player.transform.position = m_spawnPoint.transform.position;
+        m_goolObject = GameObject.FindGameObjectWithTag("Gool");
     }
 
     // Start is called before the first frame update
@@ -56,8 +76,9 @@ public class GameManager : MonoBehaviour
         {
             if (m_goolController.m_gool)//ゴールしたらシーンをロードする
             {
-                m_playerController.StartLoadScene();
                 m_goolController.m_gool = false;
+                m_FC.m_isFadeOut = true;
+                Invoke("StartLoadScene", 3);
             }
         }
         catch (System.NullReferenceException)
@@ -66,6 +87,7 @@ public class GameManager : MonoBehaviour
         }
         
     }
+
     /// <summary>
     /// カメラを制御する
     /// </summary>
