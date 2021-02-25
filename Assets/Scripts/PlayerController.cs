@@ -23,6 +23,8 @@ public class PlayerController : MonoBehaviour
 
     /// <summary>Playerのスポーン地点</summary>
     [SerializeField] GameObject m_spawnPoint = default;
+    [SerializeField] ParticleSystem m_fireParticle = default;
+    bool m_respawn = false;
 
     //-----Player情報-----
     /// <summary>Playerのライフ</summary>
@@ -99,8 +101,9 @@ public class PlayerController : MonoBehaviour
     {
         h = Input.GetAxisRaw("Horizontal");
         v = Input.GetAxisRaw("Vertical");
-
         dir = Vector3.forward * v + Vector3.right * h;
+
+        if (m_respawn) return;//リスポーン中は移動できないようにする
 
         if (dir == Vector3.zero)
         {
@@ -184,8 +187,24 @@ public class PlayerController : MonoBehaviour
     {
         m_spawnPoint = GameObject.FindGameObjectWithTag("SpawnPoint");
         this.transform.position = m_spawnPoint.transform.position;
-        m_life--;
-        Debug.Log($"Life:{m_life}");
+        Invoke("UnEffect", 1.2f);
+    }
+
+    /// <summary>
+    /// リスポーンエフェクトを再生する
+    /// </summary>
+    void OnEffect()
+    {
+        m_fireParticle.Play();
+    }
+
+    /// <summary>
+    /// リスポーンエフェクトを停止する
+    /// </summary>
+    void UnEffect()
+    {
+        m_fireParticle.Stop(true, ParticleSystemStopBehavior.StopEmitting);//うっすらと消えていく
+        m_respawn = false;
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -216,7 +235,9 @@ public class PlayerController : MonoBehaviour
     {
         if (other.tag == "Thorns")
         {
+            m_respawn = true;
             Invoke("Respawn", 2);
+            Invoke("OnEffect", 1.5f);
             m_anim.Play("Damage");
             AudioSource.PlayClipAtPoint(m_damageVoice, transform.position);
         }

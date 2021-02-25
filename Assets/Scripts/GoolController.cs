@@ -7,7 +7,6 @@ public class GoolController : MonoBehaviour
     /// <summary>ゴールの判定</summary>
     public bool m_gool = false;
 
-    [System.Obsolete]
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.other.tag == "Player")

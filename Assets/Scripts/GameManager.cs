@@ -42,12 +42,20 @@ public class GameManager : MonoBehaviour
 
     public void StartLoadScene()
     {
-        // イベントにイベントハンドラーを追加
-        SceneManager.sceneLoaded += SceneLoaded;
+        SceneManager.sceneLoaded += SceneLoaded;//Sceneをロードした時に処理を実行
         // シーンの読み込み
-        SceneManager.LoadScene("Stage1");
+        if (SceneManager.GetActiveScene().name == "TitleSceane")
+            SceneManager.LoadScene("TutorialSceane");
+
+        if (SceneManager.GetActiveScene().name == "TutorialSceane")
+            SceneManager.LoadScene("Stage1");
     }
 
+    /// <summary>
+    /// Sceneのロードが行われたときに、フェードインして、プレイヤーの位置をスポーン地点に移動させる
+    /// </summary>
+    /// <param name="nextScene"></param>
+    /// <param name="mode"></param>
     void SceneLoaded(Scene nextScene, LoadSceneMode mode)
     {
         m_FC.m_isFadeIn = true;
@@ -85,7 +93,7 @@ public class GameManager : MonoBehaviour
         {
             Debug.LogError("Goolオブジェクトがアサインされていません。");
         }
-        
+
     }
 
     /// <summary>
@@ -105,7 +113,7 @@ public class GameManager : MonoBehaviour
             ((CinemachineVirtualCamera)m_vcam).GetCinemachineComponent<CinemachinePOV>().m_HorizontalAxis.Value = angle;
             ((CinemachineVirtualCamera)m_vcam).GetCinemachineComponent<CinemachinePOV>().m_VerticalAxis.Value = 0f;
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            
+
             m_vcam.MoveToTopOfPrioritySubqueue(); //vcamを優先
             m_magicCircle.SetActive(true); //魔法陣の展開
             Camera.main.cullingMask = ~(1 << m_player.layer);//8レイヤー(Plyaer)以外は全部有効にする
