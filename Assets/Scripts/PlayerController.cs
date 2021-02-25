@@ -24,7 +24,7 @@ public class PlayerController : MonoBehaviour
     /// <summary>Playerのスポーン地点</summary>
     [SerializeField] GameObject m_spawnPoint = default;
     [SerializeField] ParticleSystem m_fireParticle = default;
-    bool m_respawn = false;
+    public static bool m_respawn = false;
 
     //-----Player情報-----
     /// <summary>Playerのライフ</summary>
@@ -64,12 +64,14 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (m_respawn || GameManager.m_ending) return;//リスポーン中とエンディング中は移動できないようにする
         PlayerMove();
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (m_respawn || GameManager.m_ending) return;//リスポーン中とエンディング中は移動できないようにする
         PlayerAttackAnimation();
     }
 
@@ -102,8 +104,6 @@ public class PlayerController : MonoBehaviour
         h = Input.GetAxisRaw("Horizontal");
         v = Input.GetAxisRaw("Vertical");
         dir = Vector3.forward * v + Vector3.right * h;
-
-        if (m_respawn) return;//リスポーン中は移動できないようにする
 
         if (dir == Vector3.zero)
         {

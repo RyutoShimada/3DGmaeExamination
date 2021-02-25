@@ -26,6 +26,8 @@ public class GameManager : MonoBehaviour
     GoolController m_goolController;
     /// <summary>このクラスのインスタンスが既にあるかどうかを確認する</summary>
     public static bool m_isExists = false;
+    public static bool m_ending = false;
+    AudioSource m_audio;
 
     private void Awake()
     {
@@ -49,6 +51,9 @@ public class GameManager : MonoBehaviour
 
         if (SceneManager.GetActiveScene().name == "TutorialSceane")
             SceneManager.LoadScene("Stage1");
+
+        if (SceneManager.GetActiveScene().name == "Stage1")
+            SceneManager.LoadScene("EndScene");
     }
 
     /// <summary>
@@ -62,6 +67,11 @@ public class GameManager : MonoBehaviour
         m_spawnPoint = GameObject.FindGameObjectWithTag("SpawnPoint");
         m_player.transform.position = m_spawnPoint.transform.position;
         m_goolObject = GameObject.FindGameObjectWithTag("Gool");
+        if (SceneManager.GetActiveScene().name == "EndScene")//EndSceneの時の処理
+        {
+            m_audio.Stop();//音楽を止める
+            m_ending = true;//フラグを立てる
+        }
     }
 
     // Start is called before the first frame update
@@ -74,26 +84,21 @@ public class GameManager : MonoBehaviour
 
         m_playerController = m_player.GetComponent<PlayerController>();
         m_goolController = m_goolObject.GetComponent<GoolController>();
+        m_audio = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (PlayerController.m_respawn || m_ending) return;//リスポーン中とエンディング中は移動できないようにする
         CameraControl();
-        try
+        if (!m_goolController) return;//nullエラーを出ないようにする
+        if (m_goolController.m_gool)//ゴールしたらシーンをロードする
         {
-            if (m_goolController.m_gool)//ゴールしたらシーンをロードする
-            {
-                m_goolController.m_gool = false;
-                m_FC.m_isFadeOut = true;
-                Invoke("StartLoadScene", 3);
-            }
+            m_goolController.m_gool = false;
+            m_FC.m_isFadeOut = true;
+            Invoke("StartLoadScene", 3);
         }
-        catch (System.NullReferenceException)
-        {
-            Debug.LogError("Goolオブジェクトがアサインされていません。");
-        }
-
     }
 
     /// <summary>
