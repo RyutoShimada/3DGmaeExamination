@@ -5,14 +5,14 @@ using UnityEngine;
 public class GoolController : MonoBehaviour
 {
     /// <summary>ゴールの判定</summary>
-    public bool m_gool = false;
+    public static bool m_gool = false;
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.other.tag == "Player")
+        if (collision.gameObject.tag == "Player")
         {
             m_gool = true;
-           //Debug.Log("Gool:" + m_gool);
+           Debug.Log("Gool:" + m_gool);
         }
     }
 }

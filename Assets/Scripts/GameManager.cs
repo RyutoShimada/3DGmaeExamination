@@ -46,9 +46,6 @@ public class GameManager : MonoBehaviour
     {
         SceneManager.sceneLoaded += SceneLoaded;//Sceneをロードした時に処理を実行
         // シーンの読み込み
-        if (SceneManager.GetActiveScene().name == "TitleSceane")
-            SceneManager.LoadScene("TutorialSceane");
-
         if (SceneManager.GetActiveScene().name == "TutorialSceane")
             SceneManager.LoadScene("Stage1");
 
@@ -63,15 +60,16 @@ public class GameManager : MonoBehaviour
     /// <param name="mode"></param>
     void SceneLoaded(Scene nextScene, LoadSceneMode mode)
     {
-        m_FC.m_isFadeIn = true;
-        m_spawnPoint = GameObject.FindGameObjectWithTag("SpawnPoint");
-        m_player.transform.position = m_spawnPoint.transform.position;
-        m_goolObject = GameObject.FindGameObjectWithTag("Gool");
         if (SceneManager.GetActiveScene().name == "EndScene")//EndSceneの時の処理
         {
             m_audio.Stop();//音楽を止める
             m_ending = true;//フラグを立てる
         }
+
+        m_FC.m_isFadeIn = true;
+        m_spawnPoint = GameObject.FindGameObjectWithTag("SpawnPoint");
+        m_player.transform.position = m_spawnPoint.transform.position;
+        m_goolObject = GameObject.FindGameObjectWithTag("Gool");
     }
 
     // Start is called before the first frame update
@@ -92,10 +90,11 @@ public class GameManager : MonoBehaviour
     {
         if (PlayerController.m_respawn || m_ending) return;//リスポーン中とエンディング中は移動できないようにする
         CameraControl();
-        if (!m_goolController) return;//nullエラーを出ないようにする
-        if (m_goolController.m_gool)//ゴールしたらシーンをロードする
+
+        if (GoolController.m_gool)//ゴールしたらシーンをロードする
         {
-            m_goolController.m_gool = false;
+            GoolController.m_gool = false;
+            Debug.Log(GoolController.m_gool);
             m_FC.m_isFadeOut = true;
             Invoke("StartLoadScene", 3);
         }
