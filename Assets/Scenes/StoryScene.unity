@@ -502,6 +502,7 @@ MonoBehaviour:
   - "\u30FB\u30FB\u30FB\u3002"
   - "\u3053\u3053\u306F\uFF1F"
   - "\u3069\u3046\u3057\u3066\u3053\u3053\u306B\u30FB\u30FB\u30FB\u3002"
+  m_startLoad: {fileID: 1929602969}
 --- !u!1 &1415750682
 GameObject:
   m_ObjectHideFlags: 0

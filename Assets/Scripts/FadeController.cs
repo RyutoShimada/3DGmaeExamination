@@ -17,7 +17,7 @@ public class FadeController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        m_fadeImage = GetComponent<Image>();
+        m_fadeImage = this.gameObject.GetComponent<Image>();
         red = m_fadeImage.color.r;
         green = m_fadeImage.color.g;
         blue = m_fadeImage.color.b;
@@ -49,8 +49,17 @@ public class FadeController : MonoBehaviour
         }
     }
 
-    void StartFadeOut()
+    /// <summary>
+    /// ボタンで呼ぶ用。フェードアウトする
+    /// </summary>
+    public void FadeOutButton()
     {
+        m_isFadeOut = true;
+    }
+
+    public void StartFadeOut()
+    {
+        transform.SetAsLastSibling();
         alfa += m_fadeSpeed;
         SetAlfa();
 

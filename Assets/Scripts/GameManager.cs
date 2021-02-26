@@ -27,7 +27,7 @@ public class GameManager : MonoBehaviour
     /// <summary>このクラスのインスタンスが既にあるかどうかを確認する</summary>
     public static bool m_isExists = false;
     public static bool m_ending = false;
-    AudioSource m_audio;
+    public static AudioSource m_audio;
 
     private void Awake()
     {
@@ -46,11 +46,22 @@ public class GameManager : MonoBehaviour
     {
         SceneManager.sceneLoaded += SceneLoaded;//Sceneをロードした時に処理を実行
         // シーンの読み込み
-        if (SceneManager.GetActiveScene().name == "TutorialSceane")
+        if (SceneManager.GetActiveScene().name == "TutorialScene")
+        {
             SceneManager.LoadScene("Stage1");
+        }
 
         if (SceneManager.GetActiveScene().name == "Stage1")
+        {
             SceneManager.LoadScene("EndScene");
+            m_audio.Stop();//音楽を止める
+        }
+
+        if (SceneManager.GetActiveScene().name == "EndScene")
+        {
+            SceneManager.LoadScene("TitleScene");
+            m_audio.Play();
+        }
     }
 
     /// <summary>
@@ -64,6 +75,7 @@ public class GameManager : MonoBehaviour
         {
             m_audio.Stop();//音楽を止める
             m_ending = true;//フラグを立てる
+            Cursor.visible = true;//カーソルを消す
         }
 
         m_FC.m_isFadeIn = true;
@@ -75,14 +87,22 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Cursor.visible = false;//カーソルを消す
-        Cursor.lockState = CursorLockMode.Locked;//カメラの向きをマウスと連動させる
-        m_freelook.MoveToTopOfPrioritySubqueue(); //freelookを優先
-        m_magicCircle.SetActive(false);//魔法陣を非表示
+        if (SceneManager.GetActiveScene().name == "EndScene")//EndSceneの時の処理
+        {
+            m_audio.Stop();//音楽を止める
+            m_ending = true;//フラグを立てる
+        }
+        else
+        {
+            Cursor.visible = false;//カーソルを消す
+            Cursor.lockState = CursorLockMode.Locked;//カメラの向きをマウスと連動させる
+            m_freelook.MoveToTopOfPrioritySubqueue(); //freelookを優先
+            m_magicCircle.SetActive(false);//魔法陣を非表示
 
-        m_playerController = m_player.GetComponent<PlayerController>();
-        m_goolController = m_goolObject.GetComponent<GoolController>();
-        m_audio = GetComponent<AudioSource>();
+            m_playerController = m_player.GetComponent<PlayerController>();
+            m_goolController = m_goolObject.GetComponent<GoolController>();
+            m_audio = GetComponent<AudioSource>();
+        }
     }
 
     // Update is called once per frame

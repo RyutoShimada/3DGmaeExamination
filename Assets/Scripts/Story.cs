@@ -7,6 +7,7 @@ public class Story : MonoBehaviour
 {
 	[SerializeField] Text m_textObj = default;
 	[SerializeField] string[] m_text;
+	[SerializeField] StartLoad m_startLoad = default;
 	IEnumerator Start()
 	{
         foreach (var s in m_text)
@@ -16,6 +17,6 @@ public class Story : MonoBehaviour
 			yield return null;
 		}
 
-		StartLoad.StartToLoad();
+		m_startLoad.StartToLoad();
 	}
 }
