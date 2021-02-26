@@ -12,7 +12,7 @@ public class GoolController : MonoBehaviour
         if (collision.gameObject.tag == "Player")
         {
             m_gool = true;
-           Debug.Log("Gool:" + m_gool);
+           //Debug.Log("Gool:" + m_gool);
         }
     }
 }

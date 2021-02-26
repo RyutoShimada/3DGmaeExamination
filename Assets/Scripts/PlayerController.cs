@@ -24,7 +24,7 @@ public class PlayerController : MonoBehaviour
     /// <summary>Playerのスポーン地点</summary>
     [SerializeField] GameObject m_spawnPoint = default;
     [SerializeField] ParticleSystem m_fireParticle = default;
-    public static bool m_respawn = false;
+    public bool m_respawn = false;
 
     //-----Player情報-----
     /// <summary>Playerのライフ</summary>
@@ -37,6 +37,14 @@ public class PlayerController : MonoBehaviour
     [SerializeField] Transform m_magicBulletsPool = default;
     /// <summary>魔法を生成する場所</summary>
     [SerializeField] Transform m_muzzle = default;
+
+    bool isPlayerOperation = true;
+
+    public bool IsPlayerOperation
+    {
+        get { return isPlayerOperation; }
+        set { isPlayerOperation = value; }
+    }
 
     /// <summary>このクラスのインスタンスが既にあるかどうかを確認する</summary>
     public static bool m_isExists = false;
@@ -64,14 +72,14 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (m_respawn || GameManager.m_ending) return;//リスポーン中とエンディング中は移動できないようにする
+        if (m_respawn || GameManager.m_ending || !IsPlayerOperation) return;//リスポーン中とエンディング中は移動できないようにする
         PlayerMove();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (m_respawn || GameManager.m_ending) return;//リスポーン中とエンディング中は移動できないようにする
+        if (m_respawn || GameManager.m_ending || !IsPlayerOperation) return;//リスポーン中とエンディング中は移動できないようにする
         PlayerAttackAnimation();
     }
 

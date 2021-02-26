@@ -55,12 +55,7 @@ public class GameManager : MonoBehaviour
         {
             SceneManager.LoadScene("EndScene");
             m_audio.Stop();//音楽を止める
-        }
-
-        if (SceneManager.GetActiveScene().name == "EndScene")
-        {
-            SceneManager.LoadScene("TitleScene");
-            m_audio.Play();
+            Cursor.visible = true;
         }
     }
 
@@ -75,13 +70,16 @@ public class GameManager : MonoBehaviour
         {
             m_audio.Stop();//音楽を止める
             m_ending = true;//フラグを立てる
-            Cursor.visible = true;//カーソルを消す
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
+            Debug.Log("カーソル表示");
         }
 
         m_FC.m_isFadeIn = true;
         m_spawnPoint = GameObject.FindGameObjectWithTag("SpawnPoint");
         m_player.transform.position = m_spawnPoint.transform.position;
         m_goolObject = GameObject.FindGameObjectWithTag("Gool");
+        m_playerController = GameObject.FindObjectOfType<PlayerController>();
     }
 
     // Start is called before the first frame update
@@ -89,8 +87,9 @@ public class GameManager : MonoBehaviour
     {
         if (SceneManager.GetActiveScene().name == "EndScene")//EndSceneの時の処理
         {
-            m_audio.Stop();//音楽を止める
+            //m_audio.Stop();//音楽を止める
             m_ending = true;//フラグを立てる
+            //Debug.Log("start");
         }
         else
         {
@@ -99,7 +98,9 @@ public class GameManager : MonoBehaviour
             m_freelook.MoveToTopOfPrioritySubqueue(); //freelookを優先
             m_magicCircle.SetActive(false);//魔法陣を非表示
 
+            if (m_playerController) return;
             m_playerController = m_player.GetComponent<PlayerController>();
+            if (m_goolController) return;
             m_goolController = m_goolObject.GetComponent<GoolController>();
             m_audio = GetComponent<AudioSource>();
         }
@@ -108,13 +109,15 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (PlayerController.m_respawn || m_ending) return;//リスポーン中とエンディング中は移動できないようにする
+        if (SceneManager.GetActiveScene().name != "EndScene")
+        {
+            if (m_playerController.m_respawn || m_ending) return;//リスポーン中とエンディング中は移動できないようにする
+        }
         CameraControl();
 
         if (GoolController.m_gool)//ゴールしたらシーンをロードする
         {
             GoolController.m_gool = false;
-            Debug.Log(GoolController.m_gool);
             m_FC.m_isFadeOut = true;
             Invoke("StartLoadScene", 3);
         }
