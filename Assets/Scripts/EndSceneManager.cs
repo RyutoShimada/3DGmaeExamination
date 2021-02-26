@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class EndSceneManager : MonoBehaviour
 {
@@ -11,10 +12,15 @@ public class EndSceneManager : MonoBehaviour
     [SerializeField] float m_time = 3;
     [SerializeField] float m_timing = 5f;
     Animator m_anim;
+    GameObject m_textObj;
+    Text m_text;
 
     private void Start()
     {
         m_anim = m_model.GetComponent<Animator>();
+        m_textObj = GameObject.FindGameObjectWithTag("Text");
+        m_text = m_textObj.GetComponent<Text>();
+        m_text.enabled = false;
         Invoke("ModelMove", m_timing);
     }
 

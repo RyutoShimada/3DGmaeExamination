@@ -374,9 +374,17 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 32518458}
     m_Modifications:
+    - target: {fileID: 1000010069043380, guid: 605c5179c270f51458f90168a90b72a3, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1000013598317750, guid: 605c5179c270f51458f90168a90b72a3, type: 3}
       propertyPath: m_Name
       value: Lantern With Orb (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1000013598317750, guid: 605c5179c270f51458f90168a90b72a3, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4000010863501412, guid: 605c5179c270f51458f90168a90b72a3, type: 3}
       propertyPath: m_LocalPosition.x
@@ -3578,9 +3586,17 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 32518458}
     m_Modifications:
+    - target: {fileID: 1000010069043380, guid: 605c5179c270f51458f90168a90b72a3, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1000013598317750, guid: 605c5179c270f51458f90168a90b72a3, type: 3}
       propertyPath: m_Name
       value: Lantern With Orb
+      objectReference: {fileID: 0}
+    - target: {fileID: 1000013598317750, guid: 605c5179c270f51458f90168a90b72a3, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4000010863501412, guid: 605c5179c270f51458f90168a90b72a3, type: 3}
       propertyPath: m_LocalPosition.x
