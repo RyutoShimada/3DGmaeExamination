@@ -38,7 +38,7 @@ public class FadeController : MonoBehaviour
         }
     }
 
-    void StartFadeIn()
+    public void StartFadeIn()
     {
         alfa -= m_fadeSpeed;
         SetAlfa();

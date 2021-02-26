@@ -6,8 +6,12 @@ using UnityEngine.SceneManagement;
 
 public class StartLoad : MonoBehaviour
 {
-    public void StartToLoad()
+    public static void StartToLoad()
     {
-        SceneManager.LoadScene("TutorialSceane");
+        if (SceneManager.GetActiveScene().name == "TitleSceane")
+            SceneManager.LoadScene("StoryScene");
+
+        if (SceneManager.GetActiveScene().name == "StoryScene")
+            SceneManager.LoadScene("TutorialSceane");
     }
 }

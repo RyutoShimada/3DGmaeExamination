@@ -5,17 +5,17 @@ using UnityEngine.UI;
 
 public class Story : MonoBehaviour
 {
-	[SerializeField] Text m_text = default;
+	[SerializeField] Text m_textObj = default;
+	[SerializeField] string[] m_text;
 	IEnumerator Start()
 	{
-		m_text.text = "んん・・・。";
-		yield return new WaitUntil(() => Input.GetMouseButtonDown(0));
-		yield return null;
+        foreach (var s in m_text)
+        {
+			m_textObj.text = s;
+			yield return new WaitUntil(() => Input.GetMouseButtonDown(0));
+			yield return null;
+		}
 
-		m_text.text = "ここはどこだ？";
-		yield return new WaitUntil(() => Input.GetMouseButtonDown(0));
-		yield return null;
-
-		m_text.text = "どうしてこんなところに？";
+		StartLoad.StartToLoad();
 	}
 }
