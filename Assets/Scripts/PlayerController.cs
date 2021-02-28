@@ -5,38 +5,37 @@ using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
-    Rigidbody m_rb;
-    float h;
-    float v;
-    Vector3 dir;
-    Vector3 vel;
-    Animator m_anim;
-
-    AudioSource m_audio;
-    [SerializeField] AudioClip m_damageVoice = default;
-    [SerializeField] AudioClip[] m_FireVoice = default;
-
-    int m_random = 0;
-
-    Rigidbody m_moveFloorRb;
-    bool m_onMoveFloor = false;
-
+    /// <summary>ダメージ時のボイス</summary>
+    [SerializeField] AudioClip m_damageVoice = null;
+    /// <summary>攻撃する時のボイス</summary>
+    [SerializeField] AudioClip[] m_FireVoice = null;
     /// <summary>Playerのスポーン地点</summary>
-    [SerializeField] GameObject m_spawnPoint = default;
-    [SerializeField] ParticleSystem m_fireParticle = default;
-    public bool m_respawn = false;
-
-    //-----Player情報-----
-    /// <summary>Playerのライフ</summary>
-    [SerializeField] int m_life = 3;
+    [SerializeField] GameObject m_spawnPoint = null;
+    /// <summary>リスポーンした際のエフェクト</summary>
+    [SerializeField] ParticleSystem m_fireParticle = null;
     /// <summary>動く速さ</summary>
     [SerializeField] float m_movingSpeed = 5f;
     /// <summary>ターンの速さ</summary>
     [SerializeField] float m_turnSpeed = 5f;
     /// <summary>魔法のオブジェクトプール</summary>
-    [SerializeField] Transform m_magicBulletsPool = default;
+    [SerializeField] Transform m_magicBulletsPool = null;
     /// <summary>魔法を生成する場所</summary>
-    [SerializeField] Transform m_muzzle = default;
+    [SerializeField] Transform m_muzzle = null;
+
+    Rigidbody m_rb;
+    float h;
+    float v;
+    Vector3 m_dir;
+    Vector3 m_vel;
+    Animator m_anim;
+    AudioSource m_audio;
+    Rigidbody m_moveFloorRb;
+    int m_random = 0;
+    bool m_onMoveFloor = false;
+    public bool m_respawn = false;
+
+    /// <summary>このクラスのインスタンスが既にあるかどうかを確認する</summary>
+    public static bool m_isExists = false;
 
     bool isPlayerOperation = true;
 
@@ -45,9 +44,6 @@ public class PlayerController : MonoBehaviour
         get { return isPlayerOperation; }
         set { isPlayerOperation = value; }
     }
-
-    /// <summary>このクラスのインスタンスが既にあるかどうかを確認する</summary>
-    public static bool m_isExists = false;
 
     private void Awake()
     {
@@ -79,27 +75,51 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (m_respawn || GameManager.m_ending || !IsPlayerOperation) return;//リスポーン中とエンディング中は移動できないようにする
-        PlayerAttackAnimation();
+        if (m_respawn || GameManager.m_ending || !IsPlayerOperation) return;//リスポーン中とエンディング中は攻撃できないようにする
+        Attack();
     }
 
     /// <summary>
-    /// 左クリックで攻撃のアニメーションをする
+    /// 攻撃する
     /// </summary>
-    void PlayerAttackAnimation()
+    void Attack()
     {
         if (Input.GetButton("Fire2"))
-        {
-            //Playerの向きをカメラの向いている方向にする
-            this.transform.rotation = Quaternion.Slerp(Camera.main.transform.rotation, this.transform.rotation, Time.deltaTime * m_turnSpeed);
-
-            //Playerが倒れないようにする
-            this.transform.rotation = new Quaternion(0f, transform.rotation.y, 0f, transform.rotation.w);
-
-            //クリックしたらAttackアニメーションを再生
+        {            
+            this.transform.rotation = Quaternion.Slerp(Camera.main.transform.rotation, this.transform.rotation, Time.deltaTime * m_turnSpeed); //Playerの向きをカメラの向いている方向にする
+            this.transform.rotation = new Quaternion(0f, transform.rotation.y, 0f, transform.rotation.w);　//Playerが倒れないようにする
             if (Input.GetButtonDown("Fire1"))
             {
-                PlayerAttack();
+                // https://qiita.com/NekoCan/items/e3908b8e4e91b95d726a を参照
+
+                //アクティブでないオブジェクトをm_magicBulletsの中から検索
+                foreach (Transform t in m_magicBulletsPool)
+                {
+                    //アクティブでないなら
+                    if (!t.gameObject.activeSelf)
+                    {
+                        t.SetPositionAndRotation(m_muzzle.position, m_muzzle.rotation); //非アクティブなオブジェクトの位置と回転を設定
+                        t.GetComponent<MagicAttack>()?.OnFire(m_muzzle.transform.forward); //向きを設定 //三項演算子の一種でMagicAttackをGetComponent出来たら実行する
+                        t.gameObject.SetActive(true);
+                        m_audio.Play();
+
+                        m_random = Random.Range(0, 3);
+                        switch (m_random)//Playerが攻撃するたびにランダムでセリフが変わる
+                        {
+                            case 0:
+                                AudioSource.PlayClipAtPoint(m_FireVoice[0], transform.position);
+                                break;
+                            case 1:
+                                AudioSource.PlayClipAtPoint(m_FireVoice[1], transform.position);
+                                break;
+                            case 2:
+                                AudioSource.PlayClipAtPoint(m_FireVoice[2], transform.position);
+                                break;
+                        }
+
+                        return;
+                    }
+                }
             }
         }
     }
@@ -111,9 +131,9 @@ public class PlayerController : MonoBehaviour
     {
         h = Input.GetAxisRaw("Horizontal");
         v = Input.GetAxisRaw("Vertical");
-        dir = Vector3.forward * v + Vector3.right * h;
+        m_dir = Vector3.forward * v + Vector3.right * h;
 
-        if (dir == Vector3.zero)
+        if (m_dir == Vector3.zero)
         {
             if (m_onMoveFloor)//動く床に乗っている時は、速度ベクトルを動く床と同じにする
             {
@@ -128,64 +148,19 @@ public class PlayerController : MonoBehaviour
         else
         {
             //カメラが向いている方向を基準にキャラクターが動くように、入力のベクトルを変換する
-            dir = Camera.main.transform.TransformDirection(dir);
-            dir.y = 0;//y軸方向はゼロにして水平方向のベクトルにする
+            m_dir = Camera.main.transform.TransformDirection(m_dir);
+            m_dir.y = 0;//y軸方向はゼロにして水平方向のベクトルにする
 
             //入力方向に滑らかに回転させる
-            Quaternion targetRotation = Quaternion.LookRotation(dir);
+            Quaternion targetRotation = Quaternion.LookRotation(m_dir);
             this.transform.rotation = Quaternion.Slerp(this.transform.rotation, targetRotation, Time.deltaTime * m_turnSpeed);
 
-            vel = dir.normalized * m_movingSpeed;
-            vel.y = m_rb.velocity.y;
-            m_rb.velocity = vel;
+            m_vel = m_dir.normalized * m_movingSpeed;
+            m_vel.y = m_rb.velocity.y;
+            m_rb.velocity = m_vel;
         }
-        //IdolとRunアニメーションを切り替える
-        m_anim.SetFloat("Run", m_rb.velocity.magnitude);
-    }
-
-    /// <summary>
-    /// 魔法弾生成
-    /// </summary>
-    /// <param name="pos">生成位置</param>
-    /// <param name="rotation">生成時の回転</param>
-    void PlayerAttack()
-    {
-        // https://qiita.com/NekoCan/items/e3908b8e4e91b95d726a を参照
-
-        //アクティブでないオブジェクトをm_magicBulletsの中から検索
-        foreach (Transform t in m_magicBulletsPool)
-        {
-            //アクティブでないなら
-            if (!t.gameObject.activeSelf)
-            {
-                //非アクティブなオブジェクトの位置と回転を設定
-                t.SetPositionAndRotation(m_muzzle.position, m_muzzle.rotation);
-
-                //向きを設定
-                t.GetComponent<MagicAttack>()?.OnFire(m_muzzle.transform.forward);//三項演算子の一種でMagicAttackをGetComponent出来た実行する
-
-                //アクティブにする
-                t.gameObject.SetActive(true);
-
-                m_audio.Play();
-
-                m_random = Random.Range(0, 3);
-                switch (m_random)//Playerが攻撃するたびにランダムでセリフが変わる
-                {
-                    case 0:
-                        AudioSource.PlayClipAtPoint(m_FireVoice[0], transform.position);
-                        break;
-                    case 1:
-                        AudioSource.PlayClipAtPoint(m_FireVoice[1], transform.position);
-                        break;
-                    case 2:
-                        AudioSource.PlayClipAtPoint(m_FireVoice[2], transform.position);
-                        break;
-                }
-
-                return;
-            }
-        }
+        
+        m_anim.SetFloat("Run", m_rb.velocity.magnitude); //IdolとRunアニメーションを切り替える
     }
 
     /// <summary>
