@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Linq;
 
 public class PlayerController : MonoBehaviour
 {
@@ -116,8 +117,6 @@ public class PlayerController : MonoBehaviour
                                 AudioSource.PlayClipAtPoint(m_FireVoice[2], transform.position);
                                 break;
                         }
-
-                        return;
                     }
                 }
             }
