@@ -39,7 +39,7 @@ public class PlayerController : MonoBehaviour
     public static bool m_isExists = false;
 
     bool isPlayerOperation = true;
-
+    ////// <summary>TimeLineのsignalから呼ばれる</summary>
     public bool IsPlayerOperation
     {
         get { return isPlayerOperation; }
@@ -69,14 +69,14 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (m_respawn || GameManager.m_ending || !IsPlayerOperation) return;//リスポーン中とエンディング中は移動できないようにする
+        if (m_respawn || GameManager.m_ending || !isPlayerOperation) return;//リスポーン中とエンディング中は移動できないようにする
         PlayerMove();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (m_respawn || GameManager.m_ending || !IsPlayerOperation) return;//リスポーン中とエンディング中は攻撃できないようにする
+        if (m_respawn || GameManager.m_ending || !isPlayerOperation) return;//リスポーン中とエンディング中は攻撃できないようにする
         Attack();
     }
 
