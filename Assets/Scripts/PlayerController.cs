@@ -31,7 +31,6 @@ public class PlayerController : MonoBehaviour
     Animator m_anim;
     AudioSource m_audio;
     Rigidbody m_moveFloorRb;
-    int m_random = 0;
     bool m_onMoveFloor = false;
     public bool m_respawn = false;
 
@@ -86,40 +85,57 @@ public class PlayerController : MonoBehaviour
     void Attack()
     {
         if (Input.GetButton("Fire2"))
-        {            
+        {
             this.transform.rotation = Quaternion.Slerp(Camera.main.transform.rotation, this.transform.rotation, Time.deltaTime * m_turnSpeed); //Playerの向きをカメラの向いている方向にする
             this.transform.rotation = new Quaternion(0f, transform.rotation.y, 0f, transform.rotation.w);　//Playerが倒れないようにする
             if (Input.GetButtonDown("Fire1"))
             {
-                // https://qiita.com/NekoCan/items/e3908b8e4e91b95d726a を参照
-
-                //アクティブでないオブジェクトをm_magicBulletsの中から検索
-                foreach (Transform t in m_magicBulletsPool)
+                //アクティブでないオブジェクトをm_magicBulletsの中から検索(ラムダ式)
+                m_magicBulletsPool.transform.Cast<Transform>().ToList().ForEach(t =>
                 {
-                    //アクティブでないなら
-                    if (!t.gameObject.activeSelf)
-                    {
-                        t.SetPositionAndRotation(m_muzzle.position, m_muzzle.rotation); //非アクティブなオブジェクトの位置と回転を設定
-                        t.GetComponent<MagicAttack>()?.OnFire(m_muzzle.transform.forward); //向きを設定 //三項演算子の一種でMagicAttackをGetComponent出来たら実行する
-                        t.gameObject.SetActive(true);
-                        m_audio.Play();
-
-                        m_random = Random.Range(0, 3);
-                        switch (m_random)//Playerが攻撃するたびにランダムでセリフが変わる
-                        {
-                            case 0:
-                                AudioSource.PlayClipAtPoint(m_FireVoice[0], transform.position);
-                                break;
-                            case 1:
-                                AudioSource.PlayClipAtPoint(m_FireVoice[1], transform.position);
-                                break;
-                            case 2:
-                                AudioSource.PlayClipAtPoint(m_FireVoice[2], transform.position);
-                                break;
-                        }
-                    }
-                }
+                    if (t.gameObject.activeSelf) return;//アクティブなら返す
+                    OnActiveChild(t, m_muzzle.position, m_muzzle.rotation, m_muzzle.forward);
+                    m_audio.Play();
+                    int random = Random.Range(0, m_FireVoice.Length);
+                    OnRandomVoice(random);
+                });
             }
+        }
+    }
+
+    /// <summary>
+    /// 子オブジェクトの位置、角度、向きを指定し、アクティブにする
+    /// </summary>
+    /// <param name="t">子オブジェクト</param>
+    /// <param name="position">位置</param>
+    /// <param name="rotation">角度</param>
+    /// <param name="forward">向き</param>
+    void OnActiveChild(Transform t, Vector3 position, Quaternion rotation, Vector3 forward)
+    {
+        //非アクティブなオブジェクトの位置と回転を設定
+        t.SetPositionAndRotation(position, rotation); 
+        //向きを設定 //nullCheckでMagicAttackをGetComponent出来たら実行する
+        t.GetComponent<MagicAttack>()?.OnFire(forward);
+        t.gameObject.SetActive(true);
+    }
+
+    /// <summary>
+    /// Playerのセリフをランダムで再生する
+    /// </summary>
+    /// <param name="random">ランダムな整数</param>
+    void OnRandomVoice(int random)
+    {
+        switch (random)//Playerが攻撃するたびにランダムでセリフが変わる
+        {
+            case 0:
+                AudioSource.PlayClipAtPoint(m_FireVoice[0], transform.position);
+                break;
+            case 1:
+                AudioSource.PlayClipAtPoint(m_FireVoice[1], transform.position);
+                break;
+            case 2:
+                AudioSource.PlayClipAtPoint(m_FireVoice[2], transform.position);
+                break;
         }
     }
 
@@ -158,7 +174,7 @@ public class PlayerController : MonoBehaviour
             m_vel.y = m_rb.velocity.y;
             m_rb.velocity = m_vel;
         }
-        
+
         m_anim.SetFloat("Run", m_rb.velocity.magnitude); //IdolとRunアニメーションを切り替える
     }
 
