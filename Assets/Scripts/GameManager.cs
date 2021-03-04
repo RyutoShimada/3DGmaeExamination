@@ -68,18 +68,29 @@ public class GameManager : MonoBehaviour
     {
         if (SceneManager.GetActiveScene().name == "EndScene")//EndSceneの時の処理
         {
-            m_audio.Stop();//音楽を止める
-            m_ending = true;//フラグを立てる
-            Cursor.visible = true;
-            Cursor.lockState = CursorLockMode.None;
-            Debug.Log("カーソル表示");
+            EndSceneLoaded();
         }
+        SceneLoaded();
+    }
 
+    public void EndSceneLoaded()
+    {
+        m_audio.Stop();//音楽を止める
+        m_ending = true;//フラグを立てる
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+    }
+
+    /// <summary>
+    /// シーンをロードした時にやる処理
+    /// </summary>
+    public void SceneLoaded()
+    {
         m_FC.m_isFadeIn = true;
         m_spawnPoint = GameObject.FindGameObjectWithTag("SpawnPoint");
         m_player.transform.position = m_spawnPoint.transform.position;
         m_goolObject = GameObject.FindGameObjectWithTag("Gool");
-        m_playerController = GameObject.FindObjectOfType<PlayerController>();
+        m_playerController = FindObjectOfType<PlayerController>();
     }
 
     // Start is called before the first frame update
