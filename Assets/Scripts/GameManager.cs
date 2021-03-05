@@ -24,6 +24,9 @@ public class GameManager : MonoBehaviour
     PlayerController m_playerController;
     /// <summary>GoolControllerを格納する変数</summary>
     GoolController m_goolController;
+
+    LoadSceneManager m_loadSceneManager = null;
+
     /// <summary>このクラスのインスタンスが既にあるかどうかを確認する</summary>
     public static bool m_isExists = false;
     public static bool m_ending = false;
@@ -42,39 +45,40 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void StartLoadScene()
-    {
-        SceneManager.sceneLoaded += SceneLoaded;//Sceneをロードした時に処理を実行
-        // シーンの読み込み
-        if (SceneManager.GetActiveScene().name == "TutorialScene")
-        {
-            SceneManager.LoadScene("Stage1");
-        }
+    //public void StartLoadScene()
+    //{
+    //    SceneManager.sceneLoaded += SceneLoaded;//Sceneをロードした時に処理を実行
+    //    // シーンの読み込み
+    //    if (SceneManager.GetActiveScene().name == "TutorialScene")
+    //    {
+    //        SceneManager.LoadScene("Stage1");
+    //    }
 
-        if (SceneManager.GetActiveScene().name == "Stage1")
-        {
-            SceneManager.LoadScene("EndScene");
-            m_audio.Stop();//音楽を止める
-            Cursor.visible = true;
-        }
-    }
+    //    if (SceneManager.GetActiveScene().name == "Stage1")
+    //    {
+    //        SceneManager.LoadScene("EndScene");
+    //        m_audio.Stop();//音楽を止める
+    //        Cursor.visible = true;
+    //    }
+    //}
 
     /// <summary>
     /// Sceneのロードが行われたときに、フェードインして、プレイヤーの位置をスポーン地点に移動させる
     /// </summary>
     /// <param name="nextScene"></param>
     /// <param name="mode"></param>
-    void SceneLoaded(Scene nextScene, LoadSceneMode mode)
-    {
-        if (SceneManager.GetActiveScene().name == "EndScene")//EndSceneの時の処理
-        {
-            EndSceneLoaded();
-        }
-        SceneLoaded();
-    }
+    //void SceneLoaded(Scene nextScene, LoadSceneMode mode)
+    //{
+    //    if (SceneManager.GetActiveScene().name == "EndScene")//EndSceneの時の処理
+    //    {
+    //        EndSceneLoaded();
+    //    }
+    //    SceneLoaded();
+    //}
 
     public void EndSceneLoaded()
     {
+        m_FC.m_isFadeIn = true;
         m_audio.Stop();//音楽を止める
         m_ending = true;//フラグを立てる
         Cursor.visible = true;
@@ -96,6 +100,8 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        m_loadSceneManager = FindObjectOfType<LoadSceneManager>();
+
         if (SceneManager.GetActiveScene().name == "EndScene")//EndSceneの時の処理
         {
             //m_audio.Stop();//音楽を止める
@@ -123,15 +129,21 @@ public class GameManager : MonoBehaviour
         if (SceneManager.GetActiveScene().name != "EndScene")
         {
             if (m_playerController.m_respawn || m_ending) return;//リスポーン中とエンディング中は移動できないようにする
+            CameraControl();
         }
-        CameraControl();
 
         if (GoolController.m_gool)//ゴールしたらシーンをロードする
         {
-            GoolController.m_gool = false;
-            m_FC.m_isFadeOut = true;
-            Invoke("StartLoadScene", 3);
+            StartCoroutine("StartLoad");
         }
+    }
+
+    IEnumerator StartLoad()
+    {
+        GoolController.m_gool = false;
+        m_FC.m_isFadeOut = true;
+        yield return new WaitForSeconds(3);
+        m_loadSceneManager.StartLoadScene();
     }
 
     /// <summary>

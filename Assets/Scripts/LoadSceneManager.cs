@@ -9,7 +9,7 @@ public class LoadSceneManager : MonoBehaviour
     public static Scene currentScene
     {
         get { return currentScene; }
-        private set { currentScene = value; }
+        private set { }
     }
 
     GameManager m_GM;

@@ -18,9 +18,6 @@ public class EndSceneManager : MonoBehaviour
     private void Start()
     {
         m_anim = m_model.GetComponent<Animator>();
-        m_textObj = GameObject.FindGameObjectWithTag("Text");
-        m_text = m_textObj.GetComponent<Text>();
-        m_text.enabled = false;
         Invoke("ModelMove", m_timing);
     }
 
