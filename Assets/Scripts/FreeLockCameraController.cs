@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CameraController : MonoBehaviour
+public class FreeLockCameraController : MonoBehaviour
 {
     /// <summary>このクラスのインスタンスが既にあるかどうかを確認する</summary>
     static bool m_isExists = false;
