@@ -32,7 +32,8 @@ public class PlayerController : MonoBehaviour
     AudioSource m_audio;
     Rigidbody m_moveFloorRb;
     bool m_onMoveFloor = false;
-    public bool m_respawn = false;
+    /// <summary>リスポーン中かどうか（読み取り専用）</summary>
+    public static bool m_respawn { get { return m_respawn; } private set {} }
 
     /// <summary>このクラスのインスタンスが既にあるかどうかを確認する</summary>
     public static bool m_isExists = false;
@@ -61,6 +62,7 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        m_respawn = false;
         m_rb = GetComponent<Rigidbody>();
         m_anim = GetComponent<Animator>();
         m_audio = GetComponent<AudioSource>();
