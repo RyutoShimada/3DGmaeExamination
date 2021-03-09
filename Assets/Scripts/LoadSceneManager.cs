@@ -24,7 +24,17 @@ public class LoadSceneManager : MonoBehaviour
     /// </summary>
     public void StartLoadScene()
     {
-        SceneManager.sceneLoaded += SceneLoaded;
+        if (SceneManager.GetActiveScene().name == "Stage1")
+        {
+            SceneManager.sceneLoaded -= SceneLoaded;
+            SceneManager.sceneLoaded += EndSceneLoaded;
+        }
+        else
+        {
+            SceneManager.sceneLoaded -= EndSceneLoaded;
+            SceneManager.sceneLoaded += SceneLoaded;
+        }
+
         currentScene = SceneManager.GetActiveScene();
 
         // シーンの読み込み
@@ -42,12 +52,10 @@ public class LoadSceneManager : MonoBehaviour
         }
         else if (SceneManager.GetActiveScene().name == "Stage1")
         {
-            SceneManager.sceneLoaded += EndSceneLoaded;
             SceneManager.LoadScene("EndScene");
         }
         else if (SceneManager.GetActiveScene().name == "EndScene")
         {
-            SceneManager.sceneLoaded -= EndSceneLoaded;
             SceneManager.LoadScene("TitleScene");
         }
     }

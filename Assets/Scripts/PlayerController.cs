@@ -32,8 +32,14 @@ public class PlayerController : MonoBehaviour
     AudioSource m_audio;
     Rigidbody m_moveFloorRb;
     bool m_onMoveFloor = false;
+
+    static bool isRespawn = false;
     /// <summary>リスポーン中かどうか（読み取り専用）</summary>
-    public static bool m_respawn { get { return m_respawn; } private set {} }
+    public static bool IsRespawn
+    {
+        get { return isRespawn; }
+        private set { isRespawn = IsRespawn; }
+    }
 
     /// <summary>このクラスのインスタンスが既にあるかどうかを確認する</summary>
     public static bool m_isExists = false;
@@ -62,7 +68,7 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        m_respawn = false;
+        IsRespawn = false;
         m_rb = GetComponent<Rigidbody>();
         m_anim = GetComponent<Animator>();
         m_audio = GetComponent<AudioSource>();
@@ -70,14 +76,14 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (m_respawn || GameManager.m_ending || !isPlayerOperation) return;//リスポーン中とエンディング中は移動できないようにする
+        if (isRespawn || GameManager.m_ending || !isPlayerOperation) return;//リスポーン中とエンディング中は移動できないようにする
         PlayerMove();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (m_respawn || GameManager.m_ending || !isPlayerOperation) return;//リスポーン中とエンディング中は攻撃できないようにする
+        if (isRespawn || GameManager.m_ending || !isPlayerOperation) return;//リスポーン中とエンディング中は攻撃できないようにする
         Attack();
     }
 
@@ -204,7 +210,7 @@ public class PlayerController : MonoBehaviour
     void UnEffect()
     {
         m_fireParticle.Stop(true, ParticleSystemStopBehavior.StopEmitting);//うっすらと消えていく
-        m_respawn = false;
+        isRespawn = false;
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -235,7 +241,7 @@ public class PlayerController : MonoBehaviour
     {
         if (other.tag == "Thorns")
         {
-            m_respawn = true;
+            isRespawn = true;
             Invoke("Respawn", 2);
             Invoke("OnEffect", 1.5f);
             m_anim.Play("Damage");

@@ -16,13 +16,13 @@ public class StartLoad : MonoBehaviour
         if (SceneManager.GetActiveScene().name == "TitleScene")
         {
             SceneManager.LoadScene("StoryScene");
-            GameManager.m_audio.Stop();//音楽を止める
+            //GameManager.m_audio.Stop();//音楽を止める
         }
 
         if (SceneManager.GetActiveScene().name == "StoryScene")
         {
             SceneManager.LoadScene("TutorialScene");
-            GameManager.m_audio.Play();
+            //GameManager.m_audio.Play();
         }
     }
 }

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Cinemachine;
+using UnityEngine.Playables;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -22,6 +24,10 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject m_spawnPoint = default;
     /// <summary>GoolControllerを格納する変数</summary>
     GoolController m_goolController;
+    PlayerController m_playerController = default;
+
+    [SerializeField] PlayableDirector m_director = null;
+    bool isPlay = true;
 
     LoadSceneManager m_loadSceneManager = null;
 
@@ -49,6 +55,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         m_loadSceneManager = FindObjectOfType<LoadSceneManager>();
+        m_playerController = FindObjectOfType<PlayerController>();
 
         if (SceneManager.GetActiveScene().name == "EndScene")//EndSceneの時の処理
         {
@@ -72,10 +79,16 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetMouseButtonDown(0) && isPlay && m_director)
+        {
+            m_director.playableGraph.GetRootPlayable(0).SetSpeed(300);
+            isPlay = false;
+        }
+
         if (SceneManager.GetActiveScene().name != "EndScene")
         {
-            if (PlayerController.m_respawn || m_ending) return;//リスポーン中とエンディング中は移動できないようにする
-            //CameraControl();
+            if (PlayerController.IsRespawn || m_ending || !m_playerController.IsPlayerOperation) return;//リスポーン中とエンディング中は移動できないようにする
+            CameraControl();
         }
 
         if (GoolController.m_gool)//ゴールしたらシーンをロードする
@@ -102,6 +115,9 @@ public class GameManager : MonoBehaviour
         m_ending = true;//フラグを立てる
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
+        GameObject text = GameObject.FindGameObjectWithTag("Text");
+        if (!text) return;
+        text.SetActive(false);
     }
 
     /// <summary>
@@ -110,10 +126,15 @@ public class GameManager : MonoBehaviour
     public void SceneLoaded()
     {
         m_FC.m_isFadeIn = true;
+        m_ending = false;
         m_spawnPoint = GameObject.FindGameObjectWithTag("SpawnPoint");
         m_goolObject = GameObject.FindGameObjectWithTag("Gool");
         m_player = GameObject.FindGameObjectWithTag("Player");
         m_player.transform.position = m_spawnPoint.transform.position;
+        m_playerController = FindObjectOfType<PlayerController>();
+        GameObject text = GameObject.FindGameObjectWithTag("Text");
+        if (!text) return;
+        text.SetActive(true);
     }
 
     /// <summary>
@@ -129,13 +150,13 @@ public class GameManager : MonoBehaviour
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////
             //先生に教えてもらったカメラ制御（エイムした時にvcamをFreeLockで見ていた方向にする処理）
-            //Vector3 freelookDir = m_freelook.LookAt.position - m_freelook.transform.position;
-            //freelookDir.y = 0;
-            //float angle = Vector3.SignedAngle(Vector3.forward, freelookDir, Vector3.up);
-            ////Debug.Log($"angle: {angle}");
-            //((CinemachineVirtualCamera)m_vcam).GetCinemachineComponent<CinemachinePOV>().m_HorizontalAxis.Value = angle;
-            //((CinemachineVirtualCamera)m_vcam).GetCinemachineComponent<CinemachinePOV>().m_VerticalAxis.Value = 0f;
-            //m_vcam.MoveToTopOfPrioritySubqueue(); //vcamを優先
+            Vector3 freelookDir = m_freelook.LookAt.position - m_freelook.transform.position;
+            freelookDir.y = 0;
+            float angle = Vector3.SignedAngle(Vector3.forward, freelookDir, Vector3.up);
+            //Debug.Log($"angle: {angle}");
+            ((CinemachineVirtualCamera)m_vcam).GetCinemachineComponent<CinemachinePOV>().m_HorizontalAxis.Value = angle;
+            ((CinemachineVirtualCamera)m_vcam).GetCinemachineComponent<CinemachinePOV>().m_VerticalAxis.Value = 0f;
+            m_vcam.MoveToTopOfPrioritySubqueue(); //vcamを優先
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////
         }
         else if (Input.GetButtonUp("Fire2"))
@@ -143,7 +164,7 @@ public class GameManager : MonoBehaviour
             m_magicCircle.SetActive(false); //魔法陣を収束
             Camera.main.cullingMask = -1;   //全てのレイヤーを有効にする
 
-            //m_freelook.MoveToTopOfPrioritySubqueue(); //freelookを優先
+            m_freelook.MoveToTopOfPrioritySubqueue(); //freelookを優先
         }
     }
 }
