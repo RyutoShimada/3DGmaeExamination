@@ -17,7 +17,7 @@ public class ReGameManager : MonoBehaviour
     /// <summary>playerのオブジェクト</summary>
     [SerializeField] GameObject m_player = default;
 
-    private void Awake()
+    private void Start()
     {
         m_spawnPoint = GameObject.FindGameObjectWithTag("SpawnPoint");
     }
