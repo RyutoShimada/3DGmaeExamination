@@ -5,14 +5,11 @@ using UnityEngine.SceneManagement;
 
 public class LoadSceneManager : MonoBehaviour
 {
+    GameManager m_GM;
     /// <summary>現在のシーン（読み取り専用）</summary>
     public static Scene currentScene
-    {
-        get { return currentScene; }
-        private set { }
-    }
+    { get { return currentScene; } private set { } }
 
-    GameManager m_GM;
 
     private void Start()
     {
