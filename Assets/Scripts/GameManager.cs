@@ -87,7 +87,8 @@ public class GameManager : MonoBehaviour
 
         if (SceneManager.GetActiveScene().name != "EndScene")
         {
-            if (PlayerController.IsRespawn || m_ending || !m_playerController.IsPlayerOperation) return;//リスポーン中とエンディング中は移動できないようにする
+            //リスポーン中とエンディング中は移動できないようにする
+            if (PlayerController.IsRespawn || m_ending || !m_playerController.IsPlayerOperation) return;
             CameraControl();
         }
 

@@ -6,8 +6,7 @@ using System.Linq;
 public class MoveFloorTrigger : MonoBehaviour
 {
     [SerializeField] ParticleSystem m_fireEffect = null;
-    [SerializeField] Transform m_moveFloor = null;
-    [SerializeField] MoveFloorController m_moveFloorController = null;
+    [SerializeField] GameObject m_moveFloor = null;
     [SerializeField] MoveFloorDoTweenVer m_moveFloorDoTween = null;
     [SerializeField] Transform[] m_targets = null;
 
@@ -19,7 +18,6 @@ public class MoveFloorTrigger : MonoBehaviour
     private void Start()
     {
         m_fireEffect.Stop();//注意(発見した):このメソッドはParticleSystemのPlayerOnAwakeのチェックを外さないと使えない
-        m_initialPosition.position = m_moveFloor.position;
     }
 
     /// <summary>
@@ -43,10 +41,14 @@ public class MoveFloorTrigger : MonoBehaviour
     /// </summary>
     void MoveToMastNear()
     {
-        //元の位置を保存
-        m_initialPosition = m_targets.OrderBy(t => Vector3.Distance(m_moveFloor.position, t.position)).FirstOrDefault();
+        var pos = m_moveFloor.gameObject.transform.position;
+
         //2番目に近い位置を次のターゲットにする
-        m_nextPosition = m_targets.OrderBy(t => Vector3.Distance(m_moveFloor.position, t.position)).Skip(1).FirstOrDefault();
+        m_nextPosition = m_targets
+            .OrderBy(t => Vector3.Distance(pos, t.position))
+            .Skip(1)
+            .FirstOrDefault();
+
         m_moveFloorDoTween?.GoMove(m_nextPosition);
     }
 
@@ -56,11 +58,11 @@ public class MoveFloorTrigger : MonoBehaviour
     void MoveInOrder()
     {
         //インデックスのnullチェック
-        if (!m_targets[m_index + 1])
+        if (m_targets[m_index + 1] == null)
         {
             m_reverse = true;
         }
-        else if (!m_targets[m_index - 1])
+        else if (m_index - 1 <= 0)
         {
             m_reverse = false;
         }
@@ -84,8 +86,8 @@ public class MoveFloorTrigger : MonoBehaviour
         if (other.tag == "MagicBullet")
         {
             OnEffect();
-            m_moveFloorController?.Move();  //旧方式
-            MoveToMastNear();               //新方式(1)
+            //m_moveFloorController?.Move();  //旧方式
+            //MoveToMastNear();               //新方式(1)動作確認済み
             MoveInOrder();                //新方式(2)
         }
     }
