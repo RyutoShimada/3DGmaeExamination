@@ -11,6 +11,8 @@ public class MoveFloorTrigger : MonoBehaviour
     [SerializeField] Transform[] m_targets = null;
 
     Transform m_initialPosition = null;
+    Transform m_lastPosition = null;
+    Transform m_currntPosition = null;
     Transform m_nextPosition = null;
     int m_index = 0;
     bool m_reverse = false;
@@ -18,6 +20,9 @@ public class MoveFloorTrigger : MonoBehaviour
     private void Start()
     {
         m_fireEffect.Stop();//注意(発見した):このメソッドはParticleSystemのPlayerOnAwakeのチェックを外さないと使えない
+        m_initialPosition = m_targets[0];
+        m_currntPosition = m_targets[0];
+        m_lastPosition = m_targets[m_targets.Length - 1];
     }
 
     /// <summary>
@@ -57,12 +62,11 @@ public class MoveFloorTrigger : MonoBehaviour
     /// </summary>
     void MoveInOrder()
     {
-        //インデックスのnullチェック
-        if (m_targets[m_index + 1] == null)
+        if (m_currntPosition.position == m_lastPosition.position)
         {
             m_reverse = true;
         }
-        else if (m_index - 1 <= 0)
+        else if (m_currntPosition.position == m_initialPosition.position)
         {
             m_reverse = false;
         }
@@ -70,15 +74,16 @@ public class MoveFloorTrigger : MonoBehaviour
         //次の位置を保存
         if (m_reverse)
         {
-            m_nextPosition.position = m_targets[m_index - 1].position;
             m_index--;
+            m_nextPosition = m_targets[m_index];
         }
         else
         {
-            m_nextPosition.position = m_targets[m_index + 1].position;
             m_index++;
+            m_nextPosition = m_targets[m_index];
         }
         m_moveFloorDoTween?.GoMove(m_nextPosition);
+        m_currntPosition = m_nextPosition;//現在地の更新
     }
 
     private void OnTriggerEnter(Collider other)
@@ -88,7 +93,7 @@ public class MoveFloorTrigger : MonoBehaviour
             OnEffect();
             //m_moveFloorController?.Move();  //旧方式
             //MoveToMastNear();               //新方式(1)動作確認済み
-            MoveInOrder();                //新方式(2)
+            MoveInOrder();                  //新方式(2)動作確認済み
         }
     }
 }
